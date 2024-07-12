@@ -34,21 +34,7 @@ local PortalMaterial = CreateMaterial(
                 }
         )
 		
-if CLIENT then
-	game.AddParticles("particles/portal_projectile.pcf")
-	game.AddParticles("particles/portals.pcf")
-	game.AddParticles("particles/portals_reverse.pcf")
-	game.AddParticles("particles/portal_projectile_atlas.pcf")
-	game.AddParticles("particles/portals_atlas.pcf")
-	game.AddParticles("particles/portals_atlas_reverse.pcf")
-	game.AddParticles("particles/portal_projectile_pbody.pcf")
-	game.AddParticles("particles/portals_pbody.pcf")
-	game.AddParticles("particles/portals_pbody_reverse.pcf")
-	
-	game.AddParticles("particles/portal_projectile_pink_green.pcf")
-	game.AddParticles("particles/portals_pink_green.pcf")
-	game.AddParticles("particles/portals_pink_green_reverse.pcf")
-end
+
 
 // rendergroup
 ENT.RenderGroup = RENDERGROUP_BOTH
