@@ -9,21 +9,24 @@ local lastfootstep = 1
 local lastfoot = 0
 
 local function PlayFootstep(ply, level, pitch, volume)
-    local sound = math.random(1, 4)
-    while sound == lastfootstep do
+    local sound
+    repeat
         sound = math.random(1, 4)
-    end
+    until sound ~= lastfootstep
+
     lastfoot = (lastfoot == 0) and 1 or 0
     local filter = SERVER and RecipientFilter():AddPVS(ply:GetPos()) or nil
 
-    if GAMEMODE:PlayerFootstep(ply, pos, lastfoot, "player/footsteps/concrete" .. sound .. ".wav", .6, filter) then return end
+    if GAMEMODE:PlayerFootstep(ply, pos, lastfoot, "player/footsteps/concrete" .. sound .. ".wav", .6, filter) then
+        return
+    end
     ply:EmitSound("player/footsteps/concrete" .. sound .. ".wav", level, pitch, volume, CHAN_BODY)
 end
 
 if CLIENT then
     local function CreateMove(cmd)
         local pl = LocalPlayer()
-        if IsValid(pl) and pl.InPortal and pl.InPortal:IsValid() and pl:GetMoveType() == MOVETYPE_NOCLIP then
+        if IsValid(pl) and IsValid(pl.InPortal) and pl:GetMoveType() == MOVETYPE_NOCLIP then
             local right, forward = 0, 0
             local maxspeed = pl:GetMaxSpeed()
             if pl:Crouching() then
@@ -63,8 +66,7 @@ local function SubAxis(v, x)
 end
 
 local function IsInFront(posA, posB, normal)
-    local Vec1 = (posB - posA):GetNormalized()
-    return (normal:Dot(Vec1) < 0)
+    return (normal:Dot((posB - posA):GetNormalized()) < 0)
 end
 
 local nextFootStepTime = CurTime()
@@ -179,26 +181,17 @@ function vec:PlaneDistance(plane, normal)
 end
 
 function math.YawBetweenPoints(a, b)
-    local xDiff = a.x - b.x
-    local yDiff = a.y - b.y
-    return math.atan2(yDiff, xDiff) * (180 / math.pi)
+    return math.deg(math.atan2(a.y - b.y, a.x - b.x))
 end
 
 function util.ClosestPointInOBB(point, mins, maxs, center, Debug)
-    local Debug = Debug or false
     local yaw = math.rad(math.YawBetweenPoints(point, center))
-    local radius
-    local abs_cos_angle = math.abs(math.cos(yaw))
-    local abs_sin_angle = math.abs(math.sin(yaw))
-    if (16 * abs_sin_angle <= 16 * abs_cos_angle) then
-        radius = 16 / abs_cos_angle
-    else
-        radius = 16 / abs_sin_angle
-    end
+    local radius = math.min(
+        16 / math.max(math.abs(math.cos(yaw)), math.abs(math.sin(yaw))),
+        math.Distance(center.x, center.y, point.x, point.y)
+    )
 
-    radius = math.min(radius, math.Distance(center.x, center.y, point.x, point.y))
     local x, y = math.cos(yaw) * radius, math.sin(yaw) * radius
-
     return Vector(x, y, 0) + center
 end
 
@@ -207,25 +200,26 @@ if CLIENT then
         local point, mins, maxs, center = umsg:ReadVector(), umsg:ReadVector(), umsg:ReadVector(), umsg:ReadVector()
         util.ClosestPointInOBB(point, mins, maxs, center, true)
     end)
-	local particleFiles = {
-		"particles/portal_projectile.pcf",
-		"particles/portals.pcf",
-		"particles/portals_reverse.pcf",
-		"particles/portal_projectile_atlas.pcf",
-		"particles/portals_atlas.pcf",
-		"particles/portals_atlas_reverse.pcf",
-		"particles/portal_projectile_pbody.pcf",
-		"particles/portals_pbody.pcf",
-		"particles/portals_pbody_reverse.pcf",
-		"particles/portal_projectile_pink_green.pcf",
-		"particles/portals_pink_green.pcf",
-		"particles/portals_pink_green_reverse.pcf"
-	}
 
-	for _, particleFile in ipairs(particleFiles) do
-		game.AddParticles(particleFile)
-	end
+    local particleFiles = {
+        "particles/portal_projectile.pcf",
+        "particles/portals.pcf",
+        "particles/portals_reverse.pcf",
+        "particles/portal_projectile_atlas.pcf",
+        "particles/portals_atlas.pcf",
+        "particles/portals_atlas_reverse.pcf",
+        "particles/portal_projectile_pbody.pcf",
+        "particles/portals_pbody.pcf",
+        "particles/portals_pbody_reverse.pcf",
+        "particles/portal_projectile_pink_green.pcf",
+        "particles/portals_pink_green.pcf",
+        "particles/portals_pink_green_reverse.pcf",
+        "particles/cleansers.pcf"
+    }
 
+    for _, particleFile in ipairs(particleFiles) do
+        game.AddParticles(particleFile)
+    end
 end
 
 if SERVER then

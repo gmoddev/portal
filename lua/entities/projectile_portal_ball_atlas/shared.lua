@@ -1,8 +1,5 @@
 AddCSLuaFile("shared.lua")
 
-if CLIENT then
-    game.AddParticles("particles/cleansers.pcf")
-end
 
 ENT.Type = "anim"
 ENT.Base = "base_anim"

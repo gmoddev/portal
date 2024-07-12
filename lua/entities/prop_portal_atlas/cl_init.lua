@@ -38,9 +38,6 @@ local PortalMaterial = CreateMaterial(
 // rendergroup
 ENT.RenderGroup = RENDERGROUP_BOTH
 
-/*------------------------------------
-        Initialize()
-------------------------------------*/
 function ENT:Initialize( )
 
         self:SetRenderBounds( self:OBBMins()*20, self:OBBMaxs()*20 )
@@ -114,827 +111,226 @@ local function IsInFront( posA, posB, normal )
 
 end
 
-function ENT:Think()
-
-        if self:GetNWBool("Potal:Activated",false) == false then return end
-		self.openpercent = math.Approach( self.openpercent, 1, FrameTime() * 3.4 * ( 0.75 + self.openpercent - 0.49 ) )
-		self.openpercent_bordermat = math.Approach( self.openpercent_bordermat, 0, FrameTime() * 1.5 )
-        self.openpercent_material = math.Approach( self.openpercent_material, 1, FrameTime() * 0.75 )
-		
-        if dlightenabled:GetBool() == false then return end
-       
-        local portaltype = self:GetNWInt("Potal:PortalType",TYPE_BLUE_ATLAS)
-
-if GetConVarNumber("portal_color_ATLAS_1") >=14 then
-			glowcolor = Color(50,50,50,255)
-		elseif GetConVarNumber("portal_color_ATLAS_1") >=13 then
-			glowcolor = Color(200,200,200,255)
-		elseif GetConVarNumber("portal_color_ATLAS_1") >=12 then
-			glowcolor = Color(255,255,255,255)			
-		elseif GetConVarNumber("portal_color_ATLAS_1") >=11 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_1") >=2 then
-			glowcolor = Color(171,117,145,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_1") >=1 then
-			glowcolor = Color(199,89,146,255)
-			else		
-			glowcolor = Color(255,32,150,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_1") >=10 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_1") >=2 then
-			glowcolor = Color(171,117,171,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_1") >=1 then
-			glowcolor = Color(198,89,199,255)
-			else		
-			glowcolor = Color(250,32,255,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_1") >=9 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_1") >=2 then
-			glowcolor = Color(156,137,183,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_1") >=1 then
-			glowcolor = Color(153,113,207,255)
-			else		
-			glowcolor = Color(145,64,255,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_1") >=8 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_1") >=2 then
-			glowcolor = Color(117,124,171,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_1") >=1 then
-			glowcolor = Color(89,104,199,255)
-			else		
-			glowcolor = Color(0,32,255,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_1") >=7 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_1") >=2 then
-			glowcolor = Color(137,150,183,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_1") >=1 then
-			glowcolor = Color(113,139,207,255)
-			else		
-			glowcolor = Color( 0, 80, 255, 255 )
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_1") >=6 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_1") >=2 then
-			glowcolor = Color(117,171,171,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_1") >=1 then
-			glowcolor = Color(89,198,198,255)
-			else		
-			glowcolor = Color(32,250,255,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_1") >=5 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_1") >=2 then
-			glowcolor = Color(114,164,143,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_1") >=1 then
-			glowcolor = Color(87,195,145,255)
-			else		
-			glowcolor = Color(32,250,150,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_1") >=4 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_1") >=2 then
-			glowcolor = Color(114,164,114,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_1") >=1 then
-			glowcolor = Color(87,195,87,255)
-			else		
-			glowcolor = Color(32,250,32,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_1") >=3 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_1") >=2 then
-			glowcolor = Color(132,156,94,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_1") >=1 then
-			glowcolor = Color(139,188,62,255)
-			else		
-			glowcolor = Color(150,250,0,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_1") >=2 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_1") >=2 then
-			glowcolor = Color(171,171,117,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_1") >=1 then
-			glowcolor = Color(199,198,89,255)
-			else		
-			glowcolor = Color(255,250,32,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_1") >=1 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_1") >=2 then
-			glowcolor = Color(171,144,117,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_1") >=1 then
-			glowcolor = Color(199,143,83,255)
-			else		
-			glowcolor = Color( 255, 107, 0, 255 )
-		end
-		
-		else
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_1") >=2 then
-			glowcolor = Color(171,117,117,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_1") >=1 then
-			glowcolor = Color(199,89,89,255)
-			else 
-			glowcolor = Color(255,16,16,255)
-			
-		end
-	end
-	
-if GetConVarNumber("portal_color_ATLAS_contraste_1") >=2 then	
-brightness = 7
-elseif GetConVarNumber("portal_color_ATLAS_contraste_1") >=1 then
-brightness = 5
-else
-brightness = 3
-end	
-
-        if portaltype == TYPE_ORANGE_ATLAS then
-if GetConVarNumber("portal_color_ATLAS_2") >=14 then
-			glowcolor = Color(50,50,50,255)
-		elseif GetConVarNumber("portal_color_ATLAS_2") >=13 then
-			glowcolor = Color(200,200,200,255)
-		elseif GetConVarNumber("portal_color_ATLAS_2") >=12 then
-			glowcolor = Color(255,255,255,255)			
-		elseif GetConVarNumber("portal_color_ATLAS_2") >=11 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_2") >=2 then
-			glowcolor = Color(171,117,145,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_2") >=1 then
-			glowcolor = Color(199,89,146,255)
-			else		
-			glowcolor = Color(255,32,150,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_2") >=10 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_2") >=2 then
-			glowcolor = Color(171,117,171,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_2") >=1 then
-			glowcolor = Color(198,89,199,255)
-			else		
-			glowcolor = Color(250,32,255,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_2") >=9 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_2") >=2 then
-			glowcolor = Color(156,137,183,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_2") >=1 then
-			glowcolor = Color(153,113,207,255)
-			else		
-			glowcolor = Color(145,64,255,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_2") >=8 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_2") >=2 then
-			glowcolor = Color(117,124,171,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_2") >=1 then
-			glowcolor = Color(89,104,199,255)
-			else		
-			glowcolor = Color(0,32,255,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_2") >=7 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_2") >=2 then
-			glowcolor = Color(137,150,183,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_2") >=1 then
-			glowcolor = Color(113,139,207,255)
-			else		
-			glowcolor = Color( 0, 80, 255, 255 )
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_2") >=6 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_2") >=2 then
-			glowcolor = Color(117,171,171,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_2") >=1 then
-			glowcolor = Color(89,198,198,255)
-			else		
-			glowcolor = Color(32,250,255,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_2") >=5 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_2") >=2 then
-			glowcolor = Color(114,164,143,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_2") >=1 then
-			glowcolor = Color(87,195,145,255)
-			else		
-			glowcolor = Color(32,250,150,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_2") >=4 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_2") >=2 then
-			glowcolor = Color(114,164,114,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_2") >=1 then
-			glowcolor = Color(87,195,87,255)
-			else		
-			glowcolor = Color(32,250,32,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_2") >=3 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_2") >=2 then
-			glowcolor = Color(132,156,94,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_2") >=1 then
-			glowcolor = Color(139,188,62,255)
-			else		
-			glowcolor = Color(150,250,0,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_2") >=2 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_2") >=2 then
-			glowcolor = Color(171,171,117,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_2") >=1 then
-			glowcolor = Color(199,198,89,255)
-			else		
-			glowcolor = Color(255,250,32,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_ATLAS_2") >=1 then
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_2") >=2 then
-			glowcolor = Color(171,144,117,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_2") >=1 then
-			glowcolor = Color(199,143,83,255)
-			else		
-			glowcolor = Color( 255, 107, 0, 255 )
-		end
-		
-		else
-		
-			if GetConVarNumber("portal_color_ATLAS_saturation_2") >=2 then
-			glowcolor = Color(171,117,117,255)
-			elseif GetConVarNumber("portal_color_ATLAS_saturation_2") >=1 then
-			glowcolor = Color(199,89,89,255)
-			else 
-			glowcolor = Color(255,16,16,255)
-			
-		end
-	end
-	
-if GetConVarNumber("portal_color_ATLAS_contraste_2") >=2 then	
-brightness = 7
-elseif GetConVarNumber("portal_color_ATLAS_contraste_2") >=1 then
-brightness = 5
-else
-brightness = 3
-end	
-	
+local function GetGlowColor(portalColor, saturation)
+    if portalColor >= 14 then
+        return Color(50, 50, 50, 255)
+    elseif portalColor >= 13 then
+        return Color(200, 200, 200, 255)
+    elseif portalColor >= 12 then
+        return Color(255, 255, 255, 255)
+    elseif portalColor >= 11 then
+        if saturation >= 2 then
+            return Color(171, 117, 145, 255)
+        elseif saturation >= 1 then
+            return Color(199, 89, 146, 255)
+        else
+            return Color(255, 32, 150, 255)
         end
-       
-        --[[if lightteleport:GetBool() then
-       
-                local portal = self:GetNWEntity( "Potal:Other", nil )
-       
-                if IsValid( portal ) then
-
-                        glowvec = render.GetLightColor( portal:GetPos() ) * 255
-                        glowcolor = Color( glowvec.x, glowvec.y, glowvec.z )
-                       
-                end
-                       
-        end]]
-       -- if AvgFPS() > 60 then
-        local dlight = DynamicLight( self:EntIndex() )
-        if dlight then
-			local col = glowcolor
-			dlight.Pos = self:GetRenderOrigin() + self:GetAngles():Forward()
-			dlight.r = col.r
-			dlight.g = col.g
-			dlight.b = col.b
-			dlight.brightness = brightness
-			dlight.Decay = 9999
-			dlight.Size = 50
-			dlight.DieTime = CurTime() + .9
-			dlight.Style = 5
+    elseif portalColor >= 10 then
+        if saturation >= 2 then
+            return Color(171, 117, 171, 255)
+        elseif saturation >= 1 then
+            return Color(198, 89, 199, 255)
+        else
+            return Color(250, 32, 255, 255)
         end
-		
-	   -- end
+    elseif portalColor >= 9 then
+        if saturation >= 2 then
+            return Color(156, 137, 183, 255)
+        elseif saturation >= 1 then
+            return Color(153, 113, 207, 255)
+        else
+            return Color(145, 64, 255, 255)
+        end
+    elseif portalColor >= 8 then
+        if saturation >= 2 then
+            return Color(117, 124, 171, 255)
+        elseif saturation >= 1 then
+            return Color(89, 104, 199, 255)
+        else
+            return Color(0, 32, 255, 255)
+        end
+    elseif portalColor >= 7 then
+        if saturation >= 2 then
+            return Color(137, 150, 183, 255)
+        elseif saturation >= 1 then
+            return Color(113, 139, 207, 255)
+        else
+            return Color(0, 80, 255, 255)
+        end
+    elseif portalColor >= 6 then
+        if saturation >= 2 then
+            return Color(117, 171, 171, 255)
+        elseif saturation >= 1 then
+            return Color(89, 198, 198, 255)
+        else
+            return Color(32, 250, 255, 255)
+        end
+    elseif portalColor >= 5 then
+        if saturation >= 2 then
+            return Color(114, 164, 143, 255)
+        elseif saturation >= 1 then
+            return Color(87, 195, 145, 255)
+        else
+            return Color(32, 250, 150, 255)
+        end
+    elseif portalColor >= 4 then
+        if saturation >= 2 then
+            return Color(114, 164, 114, 255)
+        elseif saturation >= 1 then
+            return Color(87, 195, 87, 255)
+        else
+            return Color(32, 250, 32, 255)
+        end
+    elseif portalColor >= 3 then
+        if saturation >= 2 then
+            return Color(132, 156, 94, 255)
+        elseif saturation >= 1 then
+            return Color(139, 188, 62, 255)
+        else
+            return Color(150, 250, 0, 255)
+        end
+    elseif portalColor >= 2 then
+        if saturation >= 2 then
+            return Color(171, 171, 117, 255)
+        elseif saturation >= 1 then
+            return Color(199, 198, 89, 255)
+        else
+            return Color(255, 250, 32, 255)
+        end
+    elseif portalColor >= 1 then
+        if saturation >= 2 then
+            return Color(171, 144, 117, 255)
+        elseif saturation >= 1 then
+            return Color(199, 143, 83, 255)
+        else
+            return Color(255, 107, 0, 255)
+        end
+    else
+        if saturation >= 2 then
+            return Color(171, 117, 117, 255)
+        elseif saturation >= 1 then
+            return Color(199, 89, 89, 255)
+        else
+            return Color(255, 16, 16, 255)
+        end
+    end
 end
 
-				--Draw colored overlay.
-color_red = Material("models/portals/color/portalstaticoverlay_red", "PortalRefract")
-color_red_light = Material("models/portals/color/light/portalstaticoverlay_red", "PortalRefract")
-color_red_dark = Material("models/portals/color/dark/portalstaticoverlay_red", "PortalRefract")
-color_red_saturation = Material("models/portals/color/saturation/portalstaticoverlay_red", "PortalRefract")
-color_red_saturation_light = Material("models/portals/color/saturation_light/portalstaticoverlay_red", "PortalRefract")
-color_red_saturation_dark = Material("models/portals/color/saturation_dark/portalstaticoverlay_red", "PortalRefract")
-color_red_saturation_low = Material("models/portals/color/saturation_low/portalstaticoverlay_red", "PortalRefract")
-color_red_saturation_low_light = Material("models/portals/color/saturation_low_light/portalstaticoverlay_red", "PortalRefract")
-color_red_saturation_low_dark = Material("models/portals/color/saturation_low_dark/portalstaticoverlay_red", "PortalRefract")
+local function GetBrightness(contrast)
+    if contrast >= 2 then
+        return 7
+    elseif contrast >= 1 then
+        return 5
+    else
+        return 3
+    end
+end
 
-color_orange = Material("models/portals/color/portalstaticoverlay_orange", "PortalRefract")
-color_orange_light = Material("models/portals/color/light/portalstaticoverlay_orange", "PortalRefract")
-color_orange_dark = Material("models/portals/color/dark/portalstaticoverlay_orange", "PortalRefract")
-color_orange_saturation = Material("models/portals/color/saturation/portalstaticoverlay_orange", "PortalRefract")
-color_orange_saturation_light = Material("models/portals/color/saturation_light/portalstaticoverlay_orange", "PortalRefract")
-color_orange_saturation_dark = Material("models/portals/color/saturation_dark/portalstaticoverlay_orange", "PortalRefract")
-color_orange_saturation_low = Material("models/portals/color/saturation_low/portalstaticoverlay_orange", "PortalRefract")
-color_orange_saturation_low_light = Material("models/portals/color/saturation_low_light/portalstaticoverlay_orange", "PortalRefract")
-color_orange_saturation_low_dark = Material("models/portals/color/saturation_low_dark/portalstaticoverlay_orange", "PortalRefract")
+function ENT:Think()
+    if not self:GetNWBool("Potal:Activated", false) then return end
 
-color_yellow = Material("models/portals/color/portalstaticoverlay_yellow", "PortalRefract")
-color_yellow_light = Material("models/portals/color/light/portalstaticoverlay_yellow", "PortalRefract")
-color_yellow_dark = Material("models/portals/color/dark/portalstaticoverlay_yellow", "PortalRefract")
-color_yellow_saturation = Material("models/portals/color/saturation/portalstaticoverlay_yellow", "PortalRefract")
-color_yellow_saturation_light = Material("models/portals/color/saturation_light/portalstaticoverlay_yellow", "PortalRefract")
-color_yellow_saturation_dark = Material("models/portals/color/saturation_dark/portalstaticoverlay_yellow", "PortalRefract")
-color_yellow_saturation_low = Material("models/portals/color/saturation_low/portalstaticoverlay_yellow", "PortalRefract")
-color_yellow_saturation_low_light = Material("models/portals/color/saturation_low_light/portalstaticoverlay_yellow", "PortalRefract")
-color_yellow_saturation_low_dark = Material("models/portals/color/saturation_low_dark/portalstaticoverlay_yellow", "PortalRefract")
+    self.openpercent = math.Approach(self.openpercent, 1, FrameTime() * 3.4 * (0.75 + self.openpercent - 0.49))
+    self.openpercent_bordermat = math.Approach(self.openpercent_bordermat, 0, FrameTime() * 1.5)
+    self.openpercent_material = math.Approach(self.openpercent_material, 1, FrameTime() * 0.75)
 
-color_green1 = Material("models/portals/color/portalstaticoverlay_green1", "PortalRefract")
-color_green1_light = Material("models/portals/color/light/portalstaticoverlay_green1", "PortalRefract")
-color_green1_dark = Material("models/portals/color/dark/portalstaticoverlay_green1", "PortalRefract")
-color_green1_saturation = Material("models/portals/color/saturation/portalstaticoverlay_green1", "PortalRefract")
-color_green1_saturation_light = Material("models/portals/color/saturation_light/portalstaticoverlay_green1", "PortalRefract")
-color_green1_saturation_dark = Material("models/portals/color/saturation_dark/portalstaticoverlay_green1", "PortalRefract")
-color_green1_saturation_low = Material("models/portals/color/saturation_low/portalstaticoverlay_green1", "PortalRefract")
-color_green1_saturation_low_light = Material("models/portals/color/saturation_low_light/portalstaticoverlay_green1", "PortalRefract")
-color_green1_saturation_low_dark = Material("models/portals/color/saturation_low_dark/portalstaticoverlay_green1", "PortalRefract")
+    if not dlightenabled:GetBool() then return end
 
-color_green = Material("models/portals/color/portalstaticoverlay_green", "PortalRefract")
-color_green_light = Material("models/portals/color/light/portalstaticoverlay_green", "PortalRefract")
-color_green_dark = Material("models/portals/color/dark/portalstaticoverlay_green", "PortalRefract")
-color_green_saturation = Material("models/portals/color/saturation/portalstaticoverlay_green", "PortalRefract")
-color_green_saturation_light = Material("models/portals/color/saturation_light/portalstaticoverlay_green", "PortalRefract")
-color_green_saturation_dark = Material("models/portals/color/saturation_dark/portalstaticoverlay_green", "PortalRefract")
-color_green_saturation_low = Material("models/portals/color/saturation_low/portalstaticoverlay_green", "PortalRefract")
-color_green_saturation_low_light = Material("models/portals/color/saturation_low_light/portalstaticoverlay_green", "PortalRefract")
-color_green_saturation_low_dark = Material("models/portals/color/saturation_low_dark/portalstaticoverlay_green", "PortalRefract")
+    local portaltype = self:GetNWInt("Potal:PortalType", TYPE_BLUE_ATLAS)
+    local glowcolor, brightness
 
-color_green2 = Material("models/portals/color/portalstaticoverlay_green2", "PortalRefract")
-color_green2_light = Material("models/portals/color/light/portalstaticoverlay_green2", "PortalRefract")
-color_green2_dark = Material("models/portals/color/dark/portalstaticoverlay_green2", "PortalRefract")
-color_green2_saturation = Material("models/portals/color/saturation/portalstaticoverlay_green2", "PortalRefract")
-color_green2_saturation_light = Material("models/portals/color/saturation_light/portalstaticoverlay_green2", "PortalRefract")
-color_green2_saturation_dark = Material("models/portals/color/saturation_dark/portalstaticoverlay_green2", "PortalRefract")
-color_green2_saturation_low = Material("models/portals/color/saturation_low/portalstaticoverlay_green2", "PortalRefract")
-color_green2_saturation_low_light = Material("models/portals/color/saturation_low_light/portalstaticoverlay_green2", "PortalRefract")
-color_green2_saturation_low_dark = Material("models/portals/color/saturation_low_dark/portalstaticoverlay_green2", "PortalRefract")
+    local portalColor1 = GetConVarNumber("portal_color_ATLAS_1")
+    local portalSaturation1 = GetConVarNumber("portal_color_ATLAS_saturation_1")
+    glowcolor = GetGlowColor(portalColor1, portalSaturation1)
 
-color_blue_light = Material("models/portals/color/portalstaticoverlay_blue_light", "PortalRefract")
-color_blue_light_light = Material("models/portals/color/light/portalstaticoverlay_blue_light", "PortalRefract")
-color_blue_light_dark = Material("models/portals/color/dark/portalstaticoverlay_blue_light", "PortalRefract")
-color_blue_light_saturation = Material("models/portals/color/saturation/portalstaticoverlay_blue_light", "PortalRefract")
-color_blue_light_saturation_light = Material("models/portals/color/saturation_light/portalstaticoverlay_blue_light", "PortalRefract")
-color_blue_light_saturation_dark = Material("models/portals/color/saturation_dark/portalstaticoverlay_blue_light", "PortalRefract")
-color_blue_light_saturation_low = Material("models/portals/color/saturation_low/portalstaticoverlay_blue_light", "PortalRefract")
-color_blue_light_saturation_low_light = Material("models/portals/color/saturation_low_light/portalstaticoverlay_blue_light", "PortalRefract")
-color_blue_light_saturation_low_dark = Material("models/portals/color/saturation_low_dark/portalstaticoverlay_blue_light", "PortalRefract")
+    local portalContrast1 = GetConVarNumber("portal_color_ATLAS_contraste_1")
+    brightness = GetBrightness(portalContrast1)
 
-color_blue = Material("models/portals/color/portalstaticoverlay_blue", "PortalRefract")
-color_light_blue = Material("models/portals/color/light/portalstaticoverlay_blue", "PortalRefract")
-color_dark_blue = Material("models/portals/color/dark/portalstaticoverlay_blue", "PortalRefract")
-color_blue_saturation = Material("models/portals/color/saturation/portalstaticoverlay_blue", "PortalRefract")
-color_blue_saturation_light = Material("models/portals/color/saturation_light/portalstaticoverlay_blue", "PortalRefract")
-color_blue_saturation_dark = Material("models/portals/color/saturation_dark/portalstaticoverlay_blue", "PortalRefract")
-color_blue_saturation_low = Material("models/portals/color/saturation_low/portalstaticoverlay_blue", "PortalRefract")
-color_blue_saturation_low_light = Material("models/portals/color/saturation_low_light/portalstaticoverlay_blue", "PortalRefract")
-color_blue_saturation_low_dark = Material("models/portals/color/saturation_low_dark/portalstaticoverlay_blue", "PortalRefract")
+    if portaltype == TYPE_ORANGE_ATLAS then
+        local portalColor2 = GetConVarNumber("portal_color_ATLAS_2")
+        local portalSaturation2 = GetConVarNumber("portal_color_ATLAS_saturation_2")
+        glowcolor = GetGlowColor(portalColor2, portalSaturation2)
 
-color_blue_dark = Material("models/portals/color/portalstaticoverlay_blue_dark", "PortalRefract")
-color_blue_dark_light = Material("models/portals/color/light/portalstaticoverlay_blue_dark", "PortalRefract")
-color_blue_dark_dark = Material("models/portals/color/dark/portalstaticoverlay_blue_dark", "PortalRefract")
-color_blue_dark_saturation = Material("models/portals/color/saturation/portalstaticoverlay_blue_dark", "PortalRefract")
-color_blue_dark_saturation_light = Material("models/portals/color/saturation_light/portalstaticoverlay_blue_dark", "PortalRefract")
-color_blue_dark_saturation_dark = Material("models/portals/color/saturation_dark/portalstaticoverlay_blue_dark", "PortalRefract")
-color_blue_dark_saturation_low = Material("models/portals/color/saturation_low/portalstaticoverlay_blue_dark", "PortalRefract")
-color_blue_dark_saturation_low_light = Material("models/portals/color/saturation_low_light/portalstaticoverlay_blue_dark", "PortalRefract")
-color_blue_dark_saturation_low_dark = Material("models/portals/color/saturation_low_dark/portalstaticoverlay_blue_dark", "PortalRefract")
+        local portalContrast2 = GetConVarNumber("portal_color_ATLAS_contraste_2")
+        brightness = GetBrightness(portalContrast2)
+    end
+
+    local dlight = DynamicLight(self:EntIndex())
+    if dlight then
+        dlight.Pos = self:GetRenderOrigin() + self:GetAngles():Forward()
+        dlight.r = glowcolor.r
+        dlight.g = glowcolor.g
+        dlight.b = glowcolor.b
+        dlight.brightness = brightness
+        dlight.Decay = 9999
+        dlight.Size = 50
+        dlight.DieTime = CurTime() + .9
+        dlight.Style = 5
+    end
+end
 
 
-color_purple = Material("models/portals/color/portalstaticoverlay_purple", "PortalRefract")
-color_purple_light = Material("models/portals/color/light/portalstaticoverlay_purple", "PortalRefract")
-color_purple_dark = Material("models/portals/color/dark/portalstaticoverlay_purple", "PortalRefract")
-color_purple_saturation = Material("models/portals/color/saturation/portalstaticoverlay_purple", "PortalRefract")
-color_purple_saturation_light = Material("models/portals/color/saturation_light/portalstaticoverlay_purple", "PortalRefract")
-color_purple_saturation_dark = Material("models/portals/color/saturation_dark/portalstaticoverlay_purple", "PortalRefract")
-color_purple_saturation_low = Material("models/portals/color/saturation_low/portalstaticoverlay_purple", "PortalRefract")
-color_purple_saturation_low_light = Material("models/portals/color/saturation_low_light/portalstaticoverlay_purple", "PortalRefract")
-color_purple_saturation_low_dark = Material("models/portals/color/saturation_low_dark/portalstaticoverlay_purple", "PortalRefract")
+-- Define the base colors and their variations
+local colors = {
+    "red", "orange", "yellow", "green1", "green", "green2", "blue_light", "blue", "blue_dark", "purple", "pink", "pink2", "gray1", "gray", "gray2"
+}
 
-color_pink = Material("models/portals/color/portalstaticoverlay_pink", "PortalRefract")
-color_pink_light = Material("models/portals/color/light/portalstaticoverlay_pink", "PortalRefract")
-color_pink_dark = Material("models/portals/color/dark/portalstaticoverlay_pink", "PortalRefract")
-color_pink_saturation = Material("models/portals/color/saturation/portalstaticoverlay_pink", "PortalRefract")
-color_pink_saturation_light = Material("models/portals/color/saturation_light/portalstaticoverlay_pink", "PortalRefract")
-color_pink_saturation_dark = Material("models/portals/color/saturation_dark/portalstaticoverlay_pink", "PortalRefract")
-color_pink_saturation_low = Material("models/portals/color/saturation_low/portalstaticoverlay_pink", "PortalRefract")
-color_pink_saturation_low_light = Material("models/portals/color/saturation_low_light/portalstaticoverlay_pink", "PortalRefract")
-color_pink_saturation_low_dark = Material("models/portals/color/saturation_low_dark/portalstaticoverlay_pink", "PortalRefract")
+local variations = {
+    "", "_light", "_dark", "_saturation", "_saturation_light", "_saturation_dark", "_saturation_low", "_saturation_low_light", "_saturation_low_dark"
+}
 
-color_pink2 = Material("models/portals/color/portalstaticoverlay_pink2", "PortalRefract")
-color_pink2_light = Material("models/portals/color/light/portalstaticoverlay_pink2", "PortalRefract")
-color_pink2_dark = Material("models/portals/color/dark/portalstaticoverlay_pink2", "PortalRefract")
-color_pink2_saturation = Material("models/portals/color/saturation/portalstaticoverlay_pink2", "PortalRefract")
-color_pink2_saturation_light = Material("models/portals/color/saturation_light/portalstaticoverlay_pink2", "PortalRefract")
-color_pink2_saturation_dark = Material("models/portals/color/saturation_dark/portalstaticoverlay_pink2", "PortalRefract")
-color_pink2_saturation_low = Material("models/portals/color/saturation_low/portalstaticoverlay_pink2", "PortalRefract")
-color_pink2_saturation_low_light = Material("models/portals/color/saturation_low_light/portalstaticoverlay_pink2", "PortalRefract")
-color_pink2_saturation_low_dark = Material("models/portals/color/saturation_low_dark/portalstaticoverlay_pink2", "PortalRefract")
+local prefix_variations = {
+    "", "light/", "dark/", "saturation/", "saturation_light/", "saturation_dark/", "saturation_low/", "saturation_low_light/", "saturation_low_dark/"
+}
 
-color_gray1 = Material("models/portals/color/portalstaticoverlay_gray1", "PortalRefract")
-color_gray = Material("models/portals/color/portalstaticoverlay_gray", "PortalRefract")
-color_gray2 = Material("models/portals/color/portalstaticoverlay_gray2", "PortalRefract")
+local materials = {}
+local textureIDs = {}
 
-two_color_red = Material("models/portals/color_(2)/portalstaticoverlay_red", "PortalRefract")
-two_color_red_light = Material("models/portals/color_(2)/light/portalstaticoverlay_red", "PortalRefract")
-two_color_red_dark = Material("models/portals/color_(2)/dark/portalstaticoverlay_red", "PortalRefract")
-two_color_red_saturation = Material("models/portals/color_(2)/saturation/portalstaticoverlay_red", "PortalRefract")
-two_color_red_saturation_light = Material("models/portals/color_(2)/saturation_light/portalstaticoverlay_red", "PortalRefract")
-two_color_red_saturation_dark = Material("models/portals/color_(2)/saturation_dark/portalstaticoverlay_red", "PortalRefract")
-two_color_red_saturation_low = Material("models/portals/color_(2)/saturation_low/portalstaticoverlay_red", "PortalRefract")
-two_color_red_saturation_low_light = Material("models/portals/color/saturation_low_light/portalstaticoverlay_red", "PortalRefract")
-two_color_red_saturation_low_dark = Material("models/portals/color/saturation_low_dark/portalstaticoverlay_red", "PortalRefract")
+-- Function to generate material paths
+local function generateMaterialPath(base, variation, prefix)
+    if prefix then
+        return string.format("models/portals/color_%s/portalstaticoverlay_%s", prefix, base) .. variation
+    else
+        return string.format("models/portals/color/portalstaticoverlay_%s", base) .. variation
+    end
+end
 
-two_color_orange = Material("models/portals/color_(2)/portalstaticoverlay_orange", "PortalRefract")
-two_color_orange_light = Material("models/portals/color_(2)/light/portalstaticoverlay_orange", "PortalRefract")
-two_color_orange_dark = Material("models/portals/color_(2)/dark/portalstaticoverlay_orange", "PortalRefract")
-two_color_orange_saturation = Material("models/portals/color_(2)/saturation/portalstaticoverlay_orange", "PortalRefract")
-two_color_orange_saturation_light = Material("models/portals/color_(2)/saturation_light/portalstaticoverlay_orange", "PortalRefract")
-two_color_orange_saturation_dark = Material("models/portals/color_(2)/saturation_dark/portalstaticoverlay_orange", "PortalRefract")
-two_color_orange_saturation_low = Material("models/portals/color_(2)/saturation_low/portalstaticoverlay_orange", "PortalRefract")
-two_color_orange_saturation_low_light = Material("models/portals/color_(2)/saturation_low_light/portalstaticoverlay_orange", "PortalRefract")
-two_color_orange_saturation_low_dark = Material("models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_orange", "PortalRefract")
+-- Function to generate surface texture IDs
+local function generateTextureIDPath(base, variation, prefix)
+    if prefix then
+        return string.format("models/portals/color_%s/portalstaticoverlay_%s", prefix, base) .. variation
+    else
+        return string.format("models/portals/color/portalstaticoverlay_%s", base) .. variation
+    end
+end
 
-two_color_yellow = Material("models/portals/color_(2)/portalstaticoverlay_yellow", "PortalRefract")
-two_color_yellow_light = Material("models/portals/color_(2)/light/portalstaticoverlay_yellow", "PortalRefract")
-two_color_yellow_dark = Material("models/portals/color_(2)/dark/portalstaticoverlay_yellow", "PortalRefract")
-two_color_yellow_saturation = Material("models/portals/color_(2)/saturation/portalstaticoverlay_yellow", "PortalRefract")
-two_color_yellow_saturation_light = Material("models/portals/color_(2)/saturation_light/portalstaticoverlay_yellow", "PortalRefract")
-two_color_yellow_saturation_dark = Material("models/portals/color_(2)/saturation_dark/portalstaticoverlay_yellow", "PortalRefract")
-two_color_yellow_saturation_low = Material("models/portals/color_(2)/saturation_low/portalstaticoverlay_yellow", "PortalRefract")
-two_color_yellow_saturation_low_light = Material("models/portals/color_(2)/saturation_low_light/portalstaticoverlay_yellow", "PortalRefract")
-two_color_yellow_saturation_low_dark = Material("models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_yellow", "PortalRefract")
+-- Generate materials and texture IDs for normal colors
+for _, color in ipairs(colors) do
+    for i, variation in ipairs(variations) do
+        local materialName = "color_" .. color .. variation:gsub("_", "")
+        materials[materialName] = Material(generateMaterialPath(color, variation), "PortalRefract")
+        textureIDs[materialName] = surface.GetTextureID(generateTextureIDPath(color, variation, prefix_variations[i]))
+    end
+end
 
-two_color_green1 = Material("models/portals/color_(2)/portalstaticoverlay_green1", "PortalRefract")
-two_color_green1_light = Material("models/portals/color_(2)/light/portalstaticoverlay_green1", "PortalRefract")
-two_color_green1_dark = Material("models/portals/color_(2)/dark/portalstaticoverlay_green1", "PortalRefract")
-two_color_green1_saturation = Material("models/portals/color_(2)/saturation/portalstaticoverlay_green1", "PortalRefract")
-two_color_green1_saturation_light = Material("models/portals/color_(2)/saturation_light/portalstaticoverlay_green1", "PortalRefract")
-two_color_green1_saturation_dark = Material("models/portals/color_(2)/saturation_dark/portalstaticoverlay_green1", "PortalRefract")
-two_color_green1_saturation_low = Material("models/portals/color_(2)/saturation_low/portalstaticoverlay_green1", "PortalRefract")
-two_color_green1_saturation_low_light = Material("models/portals/color_(2)/saturation_low_light/portalstaticoverlay_green1", "PortalRefract")
-two_color_green1_saturation_low_dark = Material("models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_green1", "PortalRefract")
+-- Generate materials and texture IDs for "color_(2)" colors
+for _, color in ipairs(colors) do
+    for i, variation in ipairs(variations) do
+        local materialName = "two_color_" .. color .. variation:gsub("_", "")
+        materials[materialName] = Material(generateMaterialPath(color, variation, "(2)"), "PortalRefract")
+        textureIDs[materialName] = surface.GetTextureID(generateTextureIDPath(color, variation, "(2)/" .. prefix_variations[i]))
+        
+        local textureIDName = "two_portals_" .. color .. variation:gsub("_", "")
+        textureIDs[textureIDName] = surface.GetTextureID(generateTextureIDPath(color, variation, "(2)/" .. prefix_variations[i]))
+    end
+end
 
-two_color_green = Material("models/portals/color_(2)/portalstaticoverlay_green", "PortalRefract")
-two_color_green_light = Material("models/portals/color_(2)/light/portalstaticoverlay_green", "PortalRefract")
-two_color_green_dark = Material("models/portals/color_(2)/dark/portalstaticoverlay_green", "PortalRefract")
-two_color_green_saturation = Material("models/portals/color_(2)/saturation/portalstaticoverlay_green", "PortalRefract")
-two_color_green_saturation_light = Material("models/portals/color_(2)/saturation_light/portalstaticoverlay_green", "PortalRefract")
-two_color_green_saturation_dark = Material("models/portals/color_(2)/saturation_dark/portalstaticoverlay_green", "PortalRefract")
-two_color_green_saturation_low = Material("models/portals/color_(2)/saturation_low/portalstaticoverlay_green", "PortalRefract")
-two_color_green_saturation_low_light = Material("models/portals/color_(2)/saturation_low_light/portalstaticoverlay_green", "PortalRefract")
-two_color_green_saturation_low_dark = Material("models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_green", "PortalRefract")
+-- Example usage:
+-- local color_red = materials.color_red
+-- local two_color_red_saturation = materials.two_color_redsaturation
+-- local portals_red = textureIDs.color_red
+-- local two_portals_red_saturation = textureIDs.two_portals_redsaturation
 
-two_color_green2 = Material("models/portals/color_(2)/portalstaticoverlay_green2", "PortalRefract")
-two_color_green2_light = Material("models/portals/color_(2)/light/portalstaticoverlay_green2", "PortalRefract")
-two_color_green2_dark = Material("models/portals/color_(2)/dark/portalstaticoverlay_green2", "PortalRefract")
-two_color_green2_saturation = Material("models/portals/color_(2)/saturation/portalstaticoverlay_green2", "PortalRefract")
-two_color_green2_saturation_light = Material("models/portals/color_(2)/saturation_light/portalstaticoverlay_green2", "PortalRefract")
-two_color_green2_saturation_dark = Material("models/portals/color_(2)/saturation_dark/portalstaticoverlay_green2", "PortalRefract")
-two_color_green2_saturation_low = Material("models/portals/color_(2)/saturation_low/portalstaticoverlay_green2", "PortalRefract")
-two_color_green2_saturation_low_light = Material("models/portals/color_(2)/saturation_low_light/portalstaticoverlay_green2", "PortalRefract")
-two_color_green2_saturation_low_dark = Material("models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_green2", "PortalRefract")
-
-two_color_blue_light = Material("models/portals/color_(2)/portalstaticoverlay_blue_light", "PortalRefract")
-two_color_blue_light_light = Material("models/portals/color_(2)/light/portalstaticoverlay_blue_light", "PortalRefract")
-two_color_blue_light_dark = Material("models/portals/color_(2)/dark/portalstaticoverlay_blue_light", "PortalRefract")
-two_color_blue_light_saturation = Material("models/portals/color_(2)/saturation/portalstaticoverlay_blue_light", "PortalRefract")
-two_color_blue_light_saturation_light = Material("models/portals/color_(2)/saturation_light/portalstaticoverlay_blue_light", "PortalRefract")
-two_color_blue_light_saturation_dark = Material("models/portals/color_(2)/saturation_dark/portalstaticoverlay_blue_light", "PortalRefract")
-two_color_blue_light_saturation_low = Material("models/portals/color_(2)/saturation_low/portalstaticoverlay_blue_light", "PortalRefract")
-two_color_blue_light_saturation_low_light = Material("models/portals/color_(2)/saturation_low_light/portalstaticoverlay_blue_light", "PortalRefract")
-two_color_blue_light_saturation_low_dark = Material("models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_blue_light", "PortalRefract")
-
-two_color_blue = Material("models/portals/color_(2)/portalstaticoverlay_blue", "PortalRefract")
-two_color_light_blue = Material("models/portals/color_(2)/light/portalstaticoverlay_blue", "PortalRefract")
-two_color_dark_blue = Material("models/portals/color_(2)/dark/portalstaticoverlay_blue", "PortalRefract")
-two_color_blue_saturation = Material("models/portals/color_(2)/saturation/portalstaticoverlay_blue", "PortalRefract")
-two_color_blue_saturation_light = Material("models/portals/color_(2)/saturation_light/portalstaticoverlay_blue", "PortalRefract")
-two_color_blue_saturation_dark = Material("models/portals/color_(2)/saturation_dark/portalstaticoverlay_blue", "PortalRefract")
-two_color_blue_saturation_low = Material("models/portals/color_(2)/saturation_low/portalstaticoverlay_blue", "PortalRefract")
-two_color_blue_saturation_low_light = Material("models/portals/color_(2)/saturation_low_light/portalstaticoverlay_blue", "PortalRefract")
-two_color_blue_saturation_low_dark = Material("models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_blue", "PortalRefract")
-
-two_color_blue_dark = Material("models/portals/color_(2)/portalstaticoverlay_blue_dark", "PortalRefract")
-two_color_blue_dark_light = Material("models/portals/color_(2)/light/portalstaticoverlay_blue_dark", "PortalRefract")
-two_color_blue_dark_dark = Material("models/portals/color_(2)/dark/portalstaticoverlay_blue_dark", "PortalRefract")
-two_color_blue_dark_saturation = Material("models/portals/color_(2)/saturation/portalstaticoverlay_blue_dark", "PortalRefract")
-two_color_blue_dark_saturation_light = Material("models/portals/color_(2)/saturation_light/portalstaticoverlay_blue_dark", "PortalRefract")
-two_color_blue_dark_saturation_dark = Material("models/portals/color_(2)/saturation_dark/portalstaticoverlay_blue_dark", "PortalRefract")
-two_color_blue_dark_saturation_low = Material("models/portals/color_(2)/saturation_low/portalstaticoverlay_blue_dark", "PortalRefract")
-two_color_blue_dark_saturation_low_light = Material("models/portals/color_(2)/saturation_low_light/portalstaticoverlay_blue_dark", "PortalRefract")
-two_color_blue_dark_saturation_low_dark = Material("models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_blue_dark", "PortalRefract")
-
-
-two_color_purple = Material("models/portals/color_(2)/portalstaticoverlay_purple", "PortalRefract")
-two_color_purple_light = Material("models/portals/color_(2)/light/portalstaticoverlay_purple", "PortalRefract")
-two_color_purple_dark = Material("models/portals/color_(2)/dark/portalstaticoverlay_purple", "PortalRefract")
-two_color_purple_saturation = Material("models/portals/color_(2)/saturation/portalstaticoverlay_purple", "PortalRefract")
-two_color_purple_saturation_light = Material("models/portals/color_(2)/saturation_light/portalstaticoverlay_purple", "PortalRefract")
-two_color_purple_saturation_dark = Material("models/portals/color_(2)/saturation_dark/portalstaticoverlay_purple", "PortalRefract")
-two_color_purple_saturation_low = Material("models/portals/color_(2)/saturation_low/portalstaticoverlay_purple", "PortalRefract")
-two_color_purple_saturation_low_light = Material("models/portals/color_(2)/saturation_low_light/portalstaticoverlay_purple", "PortalRefract")
-two_color_purple_saturation_low_dark = Material("models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_purple", "PortalRefract")
-
-two_color_pink = Material("models/portals/color_(2)/portalstaticoverlay_pink", "PortalRefract")
-two_color_pink_light = Material("models/portals/color_(2)/light/portalstaticoverlay_pink", "PortalRefract")
-two_color_pink_dark = Material("models/portals/color_(2)/dark/portalstaticoverlay_pink", "PortalRefract")
-two_color_pink_saturation = Material("models/portals/color_(2)/saturation/portalstaticoverlay_pink", "PortalRefract")
-two_color_pink_saturation_light = Material("models/portals/color_(2)/saturation_light/portalstaticoverlay_pink", "PortalRefract")
-two_color_pink_saturation_dark = Material("models/portals/color_(2)/saturation_dark/portalstaticoverlay_pink", "PortalRefract")
-two_color_pink_saturation_low = Material("models/portals/color_(2)/saturation_low/portalstaticoverlay_pink", "PortalRefract")
-two_color_pink_saturation_low_light = Material("models/portals/color_(2)/saturation_low_light/portalstaticoverlay_pink", "PortalRefract")
-two_color_pink_saturation_low_dark = Material("models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_pink", "PortalRefract")
-
-two_color_pink2 = Material("models/portals/color_(2)/portalstaticoverlay_pink2", "PortalRefract")
-two_color_pink2_light = Material("models/portals/color_(2)/light/portalstaticoverlay_pink2", "PortalRefract")
-two_color_pink2_dark = Material("models/portals/color_(2)/dark/portalstaticoverlay_pink2", "PortalRefract")
-two_color_pink2_saturation = Material("models/portals/color_(2)/saturation/portalstaticoverlay_pink2", "PortalRefract")
-two_color_pink2_saturation_light = Material("models/portals/color_(2)/saturation_light/portalstaticoverlay_pink2", "PortalRefract")
-two_color_pink2_saturation_dark = Material("models/portals/color_(2)/saturation_dark/portalstaticoverlay_pink2", "PortalRefract")
-two_color_pink2_saturation_low = Material("models/portals/color_(2)/saturation_low/portalstaticoverlay_pink2", "PortalRefract")
-two_color_pink2_saturation_low_light = Material("models/portals/color_(2)/saturation_low_light/portalstaticoverlay_pink2", "PortalRefract")
-two_color_pink2_saturation_low_dark = Material("models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_pink2", "PortalRefract")
-
-two_color_gray1 = Material("models/portals/color_(2)/portalstaticoverlay_gray1", "PortalRefract")
-two_color_gray = Material("models/portals/color_(2)/portalstaticoverlay_gray", "PortalRefract")
-two_color_gray2 = Material("models/portals/color_(2)/portalstaticoverlay_gray2", "PortalRefract")
-
--- Portals Color Normal (Border)
-
--- Portals (1)
-portals_red = surface.GetTextureID( "models/portals/color/portalstaticoverlay_red" )
-portals_red_light = surface.GetTextureID( "models/portals/color/light/portalstaticoverlay_red" )
-portals_red_dark = surface.GetTextureID( "models/portals/color/dark/portalstaticoverlay_red" )
-portals_red_saturation = surface.GetTextureID( "models/portals/color/saturation/portalstaticoverlay_red" )
-portals_red_saturation_light = surface.GetTextureID( "models/portals/color/saturation_light/portalstaticoverlay_red" )
-portals_red_saturation_dark = surface.GetTextureID( "models/portals/color/saturation_dark/portalstaticoverlay_red" )
-portals_red_saturation_low = surface.GetTextureID( "models/portals/color/saturation_low/portalstaticoverlay_red" )
-portals_red_saturation_low_light = surface.GetTextureID( "models/portals/color/saturation_low_light/portalstaticoverlay_red" )
-portals_red_saturation_low_dark = surface.GetTextureID( "models/portals/color/saturation_low_dark/portalstaticoverlay_red" )
-
-portals_orange = surface.GetTextureID( "models/portals/color/portalstaticoverlay_orange" )
-portals_orange_light = surface.GetTextureID( "models/portals/color/light/portalstaticoverlay_orange" )
-portals_orange_dark = surface.GetTextureID( "models/portals/color/dark/portalstaticoverlay_orange" )
-portals_orange_saturation = surface.GetTextureID( "models/portals/color/saturation/portalstaticoverlay_orange" )
-portals_orange_saturation_light = surface.GetTextureID( "models/portals/color/saturation_light/portalstaticoverlay_orange" )
-portals_orange_saturation_dark = surface.GetTextureID( "models/portals/color/saturation_dark/portalstaticoverlay_orange" )
-portals_orange_saturation_low = surface.GetTextureID( "models/portals/color/saturation_low/portalstaticoverlay_orange" )
-portals_orange_saturation_low_light = surface.GetTextureID( "models/portals/color/saturation_low_light/portalstaticoverlay_orange" )
-portals_orange_saturation_low_dark = surface.GetTextureID( "models/portals/color/saturation_low_dark/portalstaticoverlay_orange" )
-
-portals_yellow = surface.GetTextureID( "models/portals/color/portalstaticoverlay_yellow" )
-portals_yellow_light = surface.GetTextureID( "models/portals/color/light/portalstaticoverlay_yellow" )
-portals_yellow_dark = surface.GetTextureID( "models/portals/color/dark/portalstaticoverlay_yellow" )
-portals_yellow_saturation = surface.GetTextureID( "models/portals/color/saturation/portalstaticoverlay_yellow" )
-portals_yellow_saturation_light = surface.GetTextureID( "models/portals/color/saturation_light/portalstaticoverlay_yellow" )
-portals_yellow_saturation_dark = surface.GetTextureID( "models/portals/color/saturation_dark/portalstaticoverlay_yellow" )
-portals_yellow_saturation_low = surface.GetTextureID( "models/portals/color/saturation_low/portalstaticoverlay_yellow" )
-portals_yellow_saturation_low_light = surface.GetTextureID( "models/portals/color/saturation_low_light/portalstaticoverlay_yellow" )
-portals_yellow_saturation_low_dark = surface.GetTextureID( "models/portals/color/saturation_low_dark/portalstaticoverlay_yellow" )
-
-portals_green1 = surface.GetTextureID( "models/portals/color/portalstaticoverlay_green1" )
-portals_green1_light = surface.GetTextureID( "models/portals/color/light/portalstaticoverlay_green1" )
-portals_green1_dark = surface.GetTextureID( "models/portals/color/dark/portalstaticoverlay_green1" )
-portals_green1_saturation = surface.GetTextureID( "models/portals/color/saturation/portalstaticoverlay_green1" )
-portals_green1_saturation_light = surface.GetTextureID( "models/portals/color/saturation_light/portalstaticoverlay_green1" )
-portals_green1_saturation_dark = surface.GetTextureID( "models/portals/color/saturation_dark/portalstaticoverlay_green1" )
-portals_green1_saturation_low = surface.GetTextureID( "models/portals/color/saturation_low/portalstaticoverlay_green1" )
-portals_green1_saturation_low_light = surface.GetTextureID( "models/portals/color/saturation_low_light/portalstaticoverlay_green1" )
-portals_green1_saturation_low_dark = surface.GetTextureID( "models/portals/color/saturation_low_dark/portalstaticoverlay_green1" )
-
-portals_green = surface.GetTextureID( "models/portals/color/portalstaticoverlay_green" )
-portals_green_light = surface.GetTextureID( "models/portals/color/light/portalstaticoverlay_green" )
-portals_green_dark = surface.GetTextureID( "models/portals/color/dark/portalstaticoverlay_green" )
-portals_green_saturation = surface.GetTextureID( "models/portals/color/saturation/portalstaticoverlay_green" )
-portals_green_saturation_light = surface.GetTextureID( "models/portals/color/saturation_light/portalstaticoverlay_green" )
-portals_green_saturation_dark = surface.GetTextureID( "models/portals/color/saturation_dark/portalstaticoverlay_green" )
-portals_green_saturation_low = surface.GetTextureID( "models/portals/color/saturation_low/portalstaticoverlay_green" )
-portals_green_saturation_low_light = surface.GetTextureID( "models/portals/color/saturation_low_light/portalstaticoverlay_green" )
-portals_green_saturation_low_dark = surface.GetTextureID( "models/portals/color/saturation_low_dark/portalstaticoverlay_green" )
-
-portals_green2 = surface.GetTextureID( "models/portals/color/portalstaticoverlay_green2" )
-portals_green2_light = surface.GetTextureID( "models/portals/color/light/portalstaticoverlay_green2" )
-portals_green2_dark = surface.GetTextureID( "models/portals/color/dark/portalstaticoverlay_green2" )
-portals_green2_saturation = surface.GetTextureID( "models/portals/color/saturation/portalstaticoverlay_green2" )
-portals_green2_saturation_light = surface.GetTextureID( "models/portals/color/saturation_light/portalstaticoverlay_green2" )
-portals_green2_saturation_dark = surface.GetTextureID( "models/portals/color/saturation_dark/portalstaticoverlay_green2" )
-portals_green2_saturation_low = surface.GetTextureID( "models/portals/color/saturation_low/portalstaticoverlay_green2" )
-portals_green2_saturation_low_light = surface.GetTextureID( "models/portals/color/saturation_low_light/portalstaticoverlay_green2" )
-portals_green2_saturation_low_dark = surface.GetTextureID( "models/portals/color/saturation_low_dark/portalstaticoverlay_green2" )
-
-portals_blue_light = surface.GetTextureID( "models/portals/color/portalstaticoverlay_blue_light" )
-portals_blue_light_light = surface.GetTextureID( "models/portals/color/light/portalstaticoverlay_blue_light" )
-portals_blue_light_dark = surface.GetTextureID( "models/portals/color/dark/portalstaticoverlay_blue_light" )
-portals_blue_light_saturation = surface.GetTextureID( "models/portals/color/saturation/portalstaticoverlay_blue_light" )
-portals_blue_light_saturation_light = surface.GetTextureID( "models/portals/color/saturation_light/portalstaticoverlay_blue_light" )
-portals_blue_light_saturation_dark = surface.GetTextureID( "models/portals/color/saturation_dark/portalstaticoverlay_blue_light" )
-portals_blue_light_saturation_low = surface.GetTextureID( "models/portals/color/saturation_low/portalstaticoverlay_blue_light" )
-portals_blue_light_saturation_low_light = surface.GetTextureID( "models/portals/color/saturation_low_light/portalstaticoverlay_blue_light" )
-portals_blue_light_saturation_low_dark = surface.GetTextureID( "models/portals/color/saturation_low_dark/portalstaticoverlay_blue_light" )
-
-portals_blue = surface.GetTextureID( "models/portals/color/portalstaticoverlay_blue" )
-portals_light_blue = surface.GetTextureID( "models/portals/color/light/portalstaticoverlay_blue" )
-portals_dark_blue = surface.GetTextureID( "models/portals/color/dark/portalstaticoverlay_blue" )
-portals_blue_saturation = surface.GetTextureID( "models/portals/color/saturation/portalstaticoverlay_blue" )
-portals_blue_saturation_light = surface.GetTextureID( "models/portals/color/saturation_light/portalstaticoverlay_blue" )
-portals_blue_saturation_dark = surface.GetTextureID( "models/portals/color/saturation_dark/portalstaticoverlay_blue" )
-portals_blue_saturation_low = surface.GetTextureID( "models/portals/color/saturation_low/portalstaticoverlay_blue" )
-portals_blue_saturation_low_light = surface.GetTextureID( "models/portals/color/saturation_low_light/portalstaticoverlay_blue" )
-portals_blue_saturation_low_dark = surface.GetTextureID( "models/portals/color/saturation_low_dark/portalstaticoverlay_blue" )
-
-portals_blue_dark = surface.GetTextureID( "models/portals/color/portalstaticoverlay_blue_dark" )
-portals_blue_dark_light = surface.GetTextureID( "models/portals/color/light/portalstaticoverlay_blue_dark" )
-portals_blue_dark_dark = surface.GetTextureID( "models/portals/color/dark/portalstaticoverlay_blue_dark" )
-portals_blue_dark_saturation = surface.GetTextureID( "models/portals/color/saturation/portalstaticoverlay_blue_dark" )
-portals_blue_dark_saturation_light = surface.GetTextureID( "models/portals/color/saturation_light/portalstaticoverlay_blue_dark" )
-portals_blue_dark_saturation_dark = surface.GetTextureID( "models/portals/color/saturation_dark/portalstaticoverlay_blue_dark" )
-portals_blue_dark_saturation_low = surface.GetTextureID( "models/portals/color/saturation_low/portalstaticoverlay_blue_dark" )
-portals_blue_dark_saturation_low_light = surface.GetTextureID( "models/portals/color/saturation_low_light/portalstaticoverlay_blue_dark" )
-portals_blue_dark_saturation_low_dark = surface.GetTextureID( "models/portals/color/saturation_low_dark/portalstaticoverlay_blue_dark" )
-
-
-portals_purple = surface.GetTextureID( "models/portals/color/portalstaticoverlay_purple" )
-portals_purple_light = surface.GetTextureID( "models/portals/color/light/portalstaticoverlay_purple" )
-portals_purple_dark = surface.GetTextureID( "models/portals/color/dark/portalstaticoverlay_purple" )
-portals_purple_saturation = surface.GetTextureID( "models/portals/color/saturation/portalstaticoverlay_purple" )
-portals_purple_saturation_light = surface.GetTextureID( "models/portals/color/saturation_light/portalstaticoverlay_purple" )
-portals_purple_saturation_dark = surface.GetTextureID( "models/portals/color/saturation_dark/portalstaticoverlay_purple" )
-portals_purple_saturation_low = surface.GetTextureID( "models/portals/color/saturation_low/portalstaticoverlay_purple" )
-portals_purple_saturation_low_light = surface.GetTextureID( "models/portals/color/saturation_low_light/portalstaticoverlay_purple" )
-portals_purple_saturation_low_dark = surface.GetTextureID( "models/portals/color/saturation_low_dark/portalstaticoverlay_purple" )
-
-portals_pink = surface.GetTextureID( "models/portals/color/portalstaticoverlay_pink" )
-portals_pink_light = surface.GetTextureID( "models/portals/color/light/portalstaticoverlay_pink" )
-portals_pink_dark = surface.GetTextureID( "models/portals/color/dark/portalstaticoverlay_pink" )
-portals_pink_saturation = surface.GetTextureID( "models/portals/color/saturation/portalstaticoverlay_pink" )
-portals_pink_saturation_light = surface.GetTextureID( "models/portals/color/saturation_light/portalstaticoverlay_pink" )
-portals_pink_saturation_dark = surface.GetTextureID( "models/portals/color/saturation_dark/portalstaticoverlay_pink" )
-portals_pink_saturation_low = surface.GetTextureID( "models/portals/color/saturation_low/portalstaticoverlay_pink" )
-portals_pink_saturation_low_light = surface.GetTextureID( "models/portals/color/saturation_low_light/portalstaticoverlay_pink" )
-portals_pink_saturation_low_dark = surface.GetTextureID( "models/portals/color/saturation_low_dark/portalstaticoverlay_pink" )
-
-portals_pink2 = surface.GetTextureID( "models/portals/color/portalstaticoverlay_pink2" )
-portals_pink2_light = surface.GetTextureID( "models/portals/color/light/portalstaticoverlay_pink2" )
-portals_pink2_dark = surface.GetTextureID( "models/portals/color/dark/portalstaticoverlay_pink2" )
-portals_pink2_saturation = surface.GetTextureID( "models/portals/color/saturation/portalstaticoverlay_pink2" )
-portals_pink2_saturation_light = surface.GetTextureID( "models/portals/color/saturation_light/portalstaticoverlay_pink2" )
-portals_pink2_saturation_dark = surface.GetTextureID( "models/portals/color/saturation_dark/portalstaticoverlay_pink2" )
-portals_pink2_saturation_low = surface.GetTextureID( "models/portals/color/saturation_low/portalstaticoverlay_pink2" )
-portals_pink2_saturation_low_light = surface.GetTextureID( "models/portals/color/saturation_low_light/portalstaticoverlay_pink2" )
-portals_pink2_saturation_low_dark = surface.GetTextureID( "models/portals/color/saturation_low_dark/portalstaticoverlay_pink2" )
-
-portals_gray1 = surface.GetTextureID( "models/portals/color/portalstaticoverlay_gray1" )
-portals_gray = surface.GetTextureID( "models/portals/color/portalstaticoverlay_gray" )
-portals_gray2 = surface.GetTextureID( "models/portals/color/portalstaticoverlay_gray2" )
-
--- Portals (2)
-
-two_portals_red = surface.GetTextureID( "models/portals/color_(2)/portalstaticoverlay_red" )
-two_portals_red_light = surface.GetTextureID( "models/portals/color_(2)/light/portalstaticoverlay_red" )
-two_portals_red_dark = surface.GetTextureID( "models/portals/color_(2)/dark/portalstaticoverlay_red" )
-two_portals_red_saturation = surface.GetTextureID( "models/portals/color_(2)/saturation/portalstaticoverlay_red" )
-two_portals_red_saturation_light = surface.GetTextureID( "models/portals/color_(2)/saturation_light/portalstaticoverlay_red" )
-two_portals_red_saturation_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_dark/portalstaticoverlay_red" )
-two_portals_red_saturation_low = surface.GetTextureID( "models/portals/color_(2)/saturation_low/portalstaticoverlay_red" )
-two_portals_red_saturation_low_light = surface.GetTextureID( "models/portals/color/saturation_low_light/portalstaticoverlay_red" )
-two_portals_red_saturation_low_dark = surface.GetTextureID( "models/portals/color/saturation_low_dark/portalstaticoverlay_red" )
-
-two_portals_orange = surface.GetTextureID( "models/portals/color_(2)/portalstaticoverlay_orange" )
-two_portals_orange_light = surface.GetTextureID( "models/portals/color_(2)/light/portalstaticoverlay_orange" )
-two_portals_orange_dark = surface.GetTextureID( "models/portals/color_(2)/dark/portalstaticoverlay_orange" )
-two_portals_orange_saturation = surface.GetTextureID( "models/portals/color_(2)/saturation/portalstaticoverlay_orange" )
-two_portals_orange_saturation_light = surface.GetTextureID( "models/portals/color_(2)/saturation_light/portalstaticoverlay_orange" )
-two_portals_orange_saturation_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_dark/portalstaticoverlay_orange" )
-two_portals_orange_saturation_low = surface.GetTextureID( "models/portals/color_(2)/saturation_low/portalstaticoverlay_orange" )
-two_portals_orange_saturation_low_light = surface.GetTextureID( "models/portals/color_(2)/saturation_low_light/portalstaticoverlay_orange" )
-two_portals_orange_saturation_low_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_orange" )
-
-two_portals_yellow = surface.GetTextureID( "models/portals/color_(2)/portalstaticoverlay_yellow" )
-two_portals_yellow_light = surface.GetTextureID( "models/portals/color_(2)/light/portalstaticoverlay_yellow" )
-two_portals_yellow_dark = surface.GetTextureID( "models/portals/color_(2)/dark/portalstaticoverlay_yellow" )
-two_portals_yellow_saturation = surface.GetTextureID( "models/portals/color_(2)/saturation/portalstaticoverlay_yellow" )
-two_portals_yellow_saturation_light = surface.GetTextureID( "models/portals/color_(2)/saturation_light/portalstaticoverlay_yellow" )
-two_portals_yellow_saturation_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_dark/portalstaticoverlay_yellow" )
-two_portals_yellow_saturation_low = surface.GetTextureID( "models/portals/color_(2)/saturation_low/portalstaticoverlay_yellow" )
-two_portals_yellow_saturation_low_light = surface.GetTextureID( "models/portals/color_(2)/saturation_low_light/portalstaticoverlay_yellow" )
-two_portals_yellow_saturation_low_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_yellow" )
-
-two_portals_green1 = surface.GetTextureID( "models/portals/color_(2)/portalstaticoverlay_green1" )
-two_portals_green1_light = surface.GetTextureID( "models/portals/color_(2)/light/portalstaticoverlay_green1" )
-two_portals_green1_dark = surface.GetTextureID( "models/portals/color_(2)/dark/portalstaticoverlay_green1" )
-two_portals_green1_saturation = surface.GetTextureID( "models/portals/color_(2)/saturation/portalstaticoverlay_green1" )
-two_portals_green1_saturation_light = surface.GetTextureID( "models/portals/color_(2)/saturation_light/portalstaticoverlay_green1" )
-two_portals_green1_saturation_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_dark/portalstaticoverlay_green1" )
-two_portals_green1_saturation_low = surface.GetTextureID( "models/portals/color_(2)/saturation_low/portalstaticoverlay_green1" )
-two_portals_green1_saturation_low_light = surface.GetTextureID( "models/portals/color_(2)/saturation_low_light/portalstaticoverlay_green1" )
-two_portals_green1_saturation_low_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_green1" )
-
-two_portals_green = surface.GetTextureID( "models/portals/color_(2)/portalstaticoverlay_green" )
-two_portals_green_light = surface.GetTextureID( "models/portals/color_(2)/light/portalstaticoverlay_green" )
-two_portals_green_dark = surface.GetTextureID( "models/portals/color_(2)/dark/portalstaticoverlay_green" )
-two_portals_green_saturation = surface.GetTextureID( "models/portals/color_(2)/saturation/portalstaticoverlay_green" )
-two_portals_green_saturation_light = surface.GetTextureID( "models/portals/color_(2)/saturation_light/portalstaticoverlay_green" )
-two_portals_green_saturation_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_dark/portalstaticoverlay_green" )
-two_portals_green_saturation_low = surface.GetTextureID( "models/portals/color_(2)/saturation_low/portalstaticoverlay_green" )
-two_portals_green_saturation_low_light = surface.GetTextureID( "models/portals/color_(2)/saturation_low_light/portalstaticoverlay_green" )
-two_portals_green_saturation_low_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_green" )
-
-two_portals_green2 = surface.GetTextureID( "models/portals/color_(2)/portalstaticoverlay_green2" )
-two_portals_green2_light = surface.GetTextureID( "models/portals/color_(2)/light/portalstaticoverlay_green2" )
-two_portals_green2_dark = surface.GetTextureID( "models/portals/color_(2)/dark/portalstaticoverlay_green2" )
-two_portals_green2_saturation = surface.GetTextureID( "models/portals/color_(2)/saturation/portalstaticoverlay_green2" )
-two_portals_green2_saturation_light = surface.GetTextureID( "models/portals/color_(2)/saturation_light/portalstaticoverlay_green2" )
-two_portals_green2_saturation_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_dark/portalstaticoverlay_green2" )
-two_portals_green2_saturation_low = surface.GetTextureID( "models/portals/color_(2)/saturation_low/portalstaticoverlay_green2" )
-two_portals_green2_saturation_low_light = surface.GetTextureID( "models/portals/color_(2)/saturation_low_light/portalstaticoverlay_green2" )
-two_portals_green2_saturation_low_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_green2" )
-
-two_portals_blue_light = surface.GetTextureID( "models/portals/color_(2)/portalstaticoverlay_blue_light" )
-two_portals_blue_light_light = surface.GetTextureID( "models/portals/color_(2)/light/portalstaticoverlay_blue_light" )
-two_portals_blue_light_dark = surface.GetTextureID( "models/portals/color_(2)/dark/portalstaticoverlay_blue_light" )
-two_portals_blue_light_saturation = surface.GetTextureID( "models/portals/color_(2)/saturation/portalstaticoverlay_blue_light" )
-two_portals_blue_light_saturation_light = surface.GetTextureID( "models/portals/color_(2)/saturation_light/portalstaticoverlay_blue_light" )
-two_portals_blue_light_saturation_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_dark/portalstaticoverlay_blue_light" )
-two_portals_blue_light_saturation_low = surface.GetTextureID( "models/portals/color_(2)/saturation_low/portalstaticoverlay_blue_light" )
-two_portals_blue_light_saturation_low_light = surface.GetTextureID( "models/portals/color_(2)/saturation_low_light/portalstaticoverlay_blue_light" )
-two_portals_blue_light_saturation_low_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_blue_light" )
-
-two_portals_blue = surface.GetTextureID( "models/portals/color_(2)/portalstaticoverlay_blue" )
-two_portals_light_blue = surface.GetTextureID( "models/portals/color_(2)/light/portalstaticoverlay_blue" )
-two_portals_dark_blue = surface.GetTextureID( "models/portals/color_(2)/dark/portalstaticoverlay_blue" )
-two_portals_blue_saturation = surface.GetTextureID( "models/portals/color_(2)/saturation/portalstaticoverlay_blue" )
-two_portals_blue_saturation_light = surface.GetTextureID( "models/portals/color_(2)/saturation_light/portalstaticoverlay_blue" )
-two_portals_blue_saturation_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_dark/portalstaticoverlay_blue" )
-two_portals_blue_saturation_low = surface.GetTextureID( "models/portals/color_(2)/saturation_low/portalstaticoverlay_blue" )
-two_portals_blue_saturation_low_light = surface.GetTextureID( "models/portals/color_(2)/saturation_low_light/portalstaticoverlay_blue" )
-two_portals_blue_saturation_low_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_blue" )
-
-two_portals_blue_dark = surface.GetTextureID( "models/portals/color_(2)/portalstaticoverlay_blue_dark" )
-two_portals_blue_dark_light = surface.GetTextureID( "models/portals/color_(2)/light/portalstaticoverlay_blue_dark" )
-two_portals_blue_dark_dark = surface.GetTextureID( "models/portals/color_(2)/dark/portalstaticoverlay_blue_dark" )
-two_portals_blue_dark_saturation = surface.GetTextureID( "models/portals/color_(2)/saturation/portalstaticoverlay_blue_dark" )
-two_portals_blue_dark_saturation_light = surface.GetTextureID( "models/portals/color_(2)/saturation_light/portalstaticoverlay_blue_dark" )
-two_portals_blue_dark_saturation_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_dark/portalstaticoverlay_blue_dark" )
-two_portals_blue_dark_saturation_low = surface.GetTextureID( "models/portals/color_(2)/saturation_low/portalstaticoverlay_blue_dark" )
-two_portals_blue_dark_saturation_low_light = surface.GetTextureID( "models/portals/color_(2)/saturation_low_light/portalstaticoverlay_blue_dark" )
-two_portals_blue_dark_saturation_low_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_blue_dark" )
-
-
-two_portals_purple = surface.GetTextureID( "models/portals/color_(2)/portalstaticoverlay_purple" )
-two_portals_purple_light = surface.GetTextureID( "models/portals/color_(2)/light/portalstaticoverlay_purple" )
-two_portals_purple_dark = surface.GetTextureID( "models/portals/color_(2)/dark/portalstaticoverlay_purple" )
-two_portals_purple_saturation = surface.GetTextureID( "models/portals/color_(2)/saturation/portalstaticoverlay_purple" )
-two_portals_purple_saturation_light = surface.GetTextureID( "models/portals/color_(2)/saturation_light/portalstaticoverlay_purple" )
-two_portals_purple_saturation_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_dark/portalstaticoverlay_purple" )
-two_portals_purple_saturation_low = surface.GetTextureID( "models/portals/color_(2)/saturation_low/portalstaticoverlay_purple" )
-two_portals_purple_saturation_low_light = surface.GetTextureID( "models/portals/color_(2)/saturation_low_light/portalstaticoverlay_purple" )
-two_portals_purple_saturation_low_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_purple" )
-
-two_portals_pink = surface.GetTextureID( "models/portals/color_(2)/portalstaticoverlay_pink" )
-two_portals_pink_light = surface.GetTextureID( "models/portals/color_(2)/light/portalstaticoverlay_pink" )
-two_portals_pink_dark = surface.GetTextureID( "models/portals/color_(2)/dark/portalstaticoverlay_pink" )
-two_portals_pink_saturation = surface.GetTextureID( "models/portals/color_(2)/saturation/portalstaticoverlay_pink" )
-two_portals_pink_saturation_light = surface.GetTextureID( "models/portals/color_(2)/saturation_light/portalstaticoverlay_pink" )
-two_portals_pink_saturation_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_dark/portalstaticoverlay_pink" )
-two_portals_pink_saturation_low = surface.GetTextureID( "models/portals/color_(2)/saturation_low/portalstaticoverlay_pink" )
-two_portals_pink_saturation_low_light = surface.GetTextureID( "models/portals/color_(2)/saturation_low_light/portalstaticoverlay_pink" )
-two_portals_pink_saturation_low_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_pink" )
-
-two_portals_pink2 = surface.GetTextureID( "models/portals/color_(2)/portalstaticoverlay_pink2" )
-two_portals_pink2_light = surface.GetTextureID( "models/portals/color_(2)/light/portalstaticoverlay_pink2" )
-two_portals_pink2_dark = surface.GetTextureID( "models/portals/color_(2)/dark/portalstaticoverlay_pink2" )
-two_portals_pink2_saturation = surface.GetTextureID( "models/portals/color_(2)/saturation/portalstaticoverlay_pink2" )
-two_portals_pink2_saturation_light = surface.GetTextureID( "models/portals/color_(2)/saturation_light/portalstaticoverlay_pink2" )
-two_portals_pink2_saturation_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_dark/portalstaticoverlay_pink2" )
-two_portals_pink2_saturation_low = surface.GetTextureID( "models/portals/color_(2)/saturation_low/portalstaticoverlay_pink2" )
-two_portals_pink2_saturation_low_light = surface.GetTextureID( "models/portals/color_(2)/saturation_low_light/portalstaticoverlay_pink2" )
-two_portals_pink2_saturation_low_dark = surface.GetTextureID( "models/portals/color_(2)/saturation_low_dark/portalstaticoverlay_pink2" )
-
-two_portals_gray1 = surface.GetTextureID( "models/portals/color_(2)/portalstaticoverlay_gray1" )
-two_portals_gray = surface.GetTextureID( "models/portals/color_(2)/portalstaticoverlay_gray" )
-two_portals_gray2 = surface.GetTextureID( "models/portals/color_(2)/portalstaticoverlay_gray2" )
 
 function ENT:DrawPortalEffects( portaltype )
 
@@ -3150,220 +2546,169 @@ function ENT:RenderPortal( origin, angles)
 	end
 end
 
-
 /*------------------------------------
         ShouldDrawLocalPlayer()
 ------------------------------------*/
---Draw yourself into the portal.. YES YOU CAN SEE YOURSELF! (Bug? Can't see your weapons)
-hook.Add( "ShouldDrawLocalPlayer ATLAS", "Portal.ShouldDrawLocalPlayer ATLAS", function()
-		local ply = LocalPlayer()
-		local portal = ply.InPortal
-        if RENDERING_PORTAL then
-			return true
-        -- elseif IsValid(portal) then
-			-- local pos,ang = portal:GetPortalPosOffsets(portal:GetOther(),ply), portal:GetPortalAngleOffsets(portal:GetOther(),ply)
-			-- pos.z = pos.z - 64
-			
-			-- ply:SetRenderOrigin(pos)
-			-- ply:SetRenderAngles(ang)
-			-- return true
-			
-		end
-end )
-hook.Add( 'PostDrawEffects ATLAS', 'PortalSimulation_PlayerRenderFix ATLAS', function()
-	cam.Start3D( EyePos(), EyeAngles() )
-	cam.End3D()
+-- Draw yourself into the portal (Bug? Can't see your weapons)
+hook.Add("ShouldDrawLocalPlayer ATLAS", "Portal.ShouldDrawLocalPlayer ATLAS", function()
+    local ply = LocalPlayer()
+    local portal = ply.InPortal
+    if RENDERING_PORTAL then
+        return true
+    end
+    -- Uncomment and adjust the code below if needed for additional functionality
+    -- elseif IsValid(portal) then
+    --     local pos, ang = portal:GetPortalPosOffsets(portal:GetOther(), ply), portal:GetPortalAngleOffsets(portal:GetOther(), ply)
+    --     pos.z = pos.z - 64
+    --     ply:SetRenderOrigin(pos)
+    --     ply:SetRenderAngles(ang)
+    --     return true
 end)
 
-hook.Add( "RenderScene ATLAS", "Portal.RenderScene ATLAS", function( Origin, Angles )
-	// render each portal
-				if GetConVarNumber("portal_texFSB") >=2 then
-	for k, v in ipairs( ents.FindByClass( "prop_portal_pbody" ) ) do
-		local viewent = GetViewEntity()
-		local pos = ( IsValid( viewent ) and viewent != LocalPlayer() ) and GetViewEntity():GetPos() or Origin
-		if IsInFront( Origin, v:GetRenderOrigin(), v:GetForward() ) then --if the player is in front of the portal, then render it..
-			// call into it to render
-			v:RenderPortal( Origin, Angles )
-		end
-	end
-				elseif GetConVarNumber("portal_texFSB") >=1 then
-	for k, v in ipairs( ents.FindByClass( "prop_portal_atlas" ) ) do
-		local viewent = GetViewEntity()
-		local pos = ( IsValid( viewent ) and viewent != LocalPlayer() ) and GetViewEntity():GetPos() or Origin
-		if IsInFront( Origin, v:GetRenderOrigin(), v:GetForward() ) then --if the player is in front of the portal, then render it..
-			// call into it to render
-			v:RenderPortal( Origin, Angles )
-		end
-	end
-				else
-	for k, v in ipairs( ents.FindByClass( "prop_portal" ) ) do
-		local viewent = GetViewEntity()
-		local pos = ( IsValid( viewent ) and viewent != LocalPlayer() ) and GetViewEntity():GetPos() or Origin
-		if IsInFront( Origin, v:GetRenderOrigin(), v:GetForward() ) then --if the player is in front of the portal, then render it..
-			// call into it to render
-			v:RenderPortal( Origin, Angles )
-		end
-	end
-				end
-	
-end )
+hook.Add("PostDrawEffects ATLAS", "PortalSimulation_PlayerRenderFix ATLAS", function()
+    cam.Start3D(EyePos(), EyeAngles())
+    cam.End3D()
+end)
+
+hook.Add("RenderScene ATLAS", "Portal.RenderScene ATLAS", function(Origin, Angles)
+    local portalType = GetConVarNumber("portal_texFSB")
+    local class = "prop_portal"
+    
+    if portalType >= 2 then
+        class = "prop_portal_pbody"
+    elseif portalType >= 1 then
+        class = "prop_portal_atlas"
+    end
+    
+    for _, v in ipairs(ents.FindByClass(class)) do
+        local viewent = GetViewEntity()
+        local pos = (IsValid(viewent) and viewent != LocalPlayer()) and viewent:GetPos() or Origin
+        if IsInFront(Origin, v:GetRenderOrigin(), v:GetForward()) then
+            v:RenderPortal(Origin, Angles)
+        end
+    end
+end)
 
 CreateClientConVar("portal_debugmonitor", 0, false, false)
-hook.Add( "HUDPaint ATLAS", "Portal.BlueMonitor ATLAS", function( w,h )
-	if GetConVarNumber("portal_debugmonitor") == 1 and GetConVarNumber("sv_cheats") == 1 then
-		// render each portal
-		for k, v in ipairs( ents.FindByClass( "prop_portal_atlas" ) ) do
-		  // debug monitor
-			if view and v:GetNWInt("Potal:PortalType", TYPE_BLUE_ATLAS) == TYPE_BLUE_ATLAS then
-				
-				surface.DrawLine(ScrW()/2-10,ScrH()/2,ScrW()/2+10,ScrH()/2)
-				surface.DrawLine(ScrW()/2,ScrH()/2-10,ScrW()/2,ScrH()/2+10)
-				
-				local b = render.EnableClipping(true)
-				render.PushCustomClipPlane( othernormal, otherdistance )
-					view.w = 500
-					view.h = 280
-					RENDERING_PORTAL = true
-						render.RenderView( view )
-					RENDERING_PORTAL = false
-				render.PopCustomClipPlane( )
-				render.EnableClipping(b)
-			end
+hook.Add("HUDPaint ATLAS", "Portal.BlueMonitor ATLAS", function(w, h)
+    if GetConVarNumber("portal_debugmonitor") == 1 and GetConVarNumber("sv_cheats") == 1 then
+        for _, v in ipairs(ents.FindByClass("prop_portal_atlas")) do
+            if view and v:GetNWInt("Potal:PortalType", TYPE_BLUE_ATLAS) == TYPE_BLUE_ATLAS then
+                surface.DrawLine(ScrW() / 2 - 10, ScrH() / 2, ScrW() / 2 + 10, ScrH() / 2)
+                surface.DrawLine(ScrW() / 2, ScrH() / 2 - 10, ScrW() / 2, ScrH() / 2 + 10)
 
-		end
-	end
-end )
+                local b = render.EnableClipping(true)
+                render.PushCustomClipPlane(othernormal, otherdistance)
+                view.w = 500
+                view.h = 280
+                RENDERING_PORTAL = true
+                render.RenderView(view)
+                RENDERING_PORTAL = false
+                render.PopCustomClipPlane()
+                render.EnableClipping(b)
+            end
+        end
+    end
+end)
 
 /*------------------------------------
         GetMotionBlurValues()
 ------------------------------------*/
-hook.Add( "GetMotionBlurValues ATLAS", "Portal.GetMotionBlurValues ATLAS", function( x, y, fwd, spin )
-        if RENDERING_PORTAL then
-                return 0, 0, 0, 0
-        end
-end )
+hook.Add("GetMotionBlurValues ATLAS", "Portal.GetMotionBlurValues ATLAS", function(x, y, fwd, spin)
+    if RENDERING_PORTAL then
+        return 0, 0, 0, 0
+    end
+end)
 
-hook.Add( "PostProcessPermitted ATLAS", "Portal.PostProcessPermitted ATLAS", function( element )
-        if element == "bloom" and RENDERING_PORTAL then
-                return false
-        end
-end )
+hook.Add("PostProcessPermitted ATLAS", "Portal.PostProcessPermitted ATLAS", function(element)
+    if element == "bloom" and RENDERING_PORTAL then
+        return false
+    end
+end)
 
-usermessage.Hook( "Portal:ObjectInPortal", function(umsg)
-        local portal = umsg:ReadEntity()
-        local ent = umsg:ReadEntity()
-        if IsValid( ent ) and IsValid( portal ) then
-			ent.InPortal = portal
-			
-			-- if ent:IsPlayer() then
-				-- portal:SetupPlayerClone(ent)
-			-- end
-			
-			ent:SetRenderClipPlaneEnabled( true )
-			ent:SetGroundEntity( portal )
-		end
-end )
+usermessage.Hook("Portal:ObjectInPortal", function(umsg)
+    local portal = umsg:ReadEntity()
+    local ent = umsg:ReadEntity()
+    if IsValid(ent) and IsValid(portal) then
+        ent.InPortal = portal
+        -- Uncomment and adjust the code below if needed for additional functionality
+        -- if ent:IsPlayer() then
+        --     portal:SetupPlayerClone(ent)
+        -- end
+        ent:SetRenderClipPlaneEnabled(true)
+        ent:SetGroundEntity(portal)
+    end
+end)
 
-usermessage.Hook( "Portal:ObjectLeftPortal", function(umsg)
-        local ent = umsg:ReadEntity()
-        if IsValid( ent ) then
-			-- if ent:IsPlayer() and IsValid(ent.PortalClone) then
-				-- ent.PortalClone:Remove()
-			-- end
-			ent.InPortal = false
-			ent:SetRenderClipPlaneEnabled(false)
-        end
-end )
+usermessage.Hook("Portal:ObjectLeftPortal", function(umsg)
+    local ent = umsg:ReadEntity()
+    if IsValid(ent) then
+        -- Uncomment and adjust the code below if needed for additional functionality
+        -- if ent:IsPlayer() and IsValid(ent.PortalClone) then
+        --     ent.PortalClone:Remove()
+        -- end
+        ent.InPortal = false
+        ent:SetRenderClipPlaneEnabled(false)
+    end
+end)
 
-hook.Add( "RenderScreenspaceEffects ATLAS", "Portal.RenderScreenspaceEffects ATLAS", function()
-        for k,v in pairs( ents.GetAll() ) do
-                if IsValid( v.InPortal ) then
-                        --local plane = Plane(v.InPortal:GetForward(),v.InPortal:GetPos())
-                       
-                        local normal = v.InPortal:GetForward()
-                        local distance = normal:Dot( v.InPortal:GetRenderOrigin() )
-                       
-						v:SetRenderClipPlaneEnabled(true)
-                        v:SetRenderClipPlane( normal, distance )
-                end
+hook.Add("RenderScreenspaceEffects ATLAS", "Portal.RenderScreenspaceEffects ATLAS", function()
+    for _, v in pairs(ents.GetAll()) do
+        if IsValid(v.InPortal) then
+            local normal = v.InPortal:GetForward()
+            local distance = normal:Dot(v.InPortal:GetRenderOrigin())
+
+            v:SetRenderClipPlaneEnabled(true)
+            v:SetRenderClipPlane(normal, distance)
         end
-		
-end )
+    end
+end)
 
 /*------------------------------------
         VectorAngles()
 ------------------------------------*/
-function math.VectorAngles( forward, up )
+function math.VectorAngles(forward, up)
+    local angles = Angle(0, 0, 0)
 
-        local angles = Angle( 0, 0, 0 )
+    local left = up:Cross(forward)
+    left:Normalize()
 
-        local left = up:Cross( forward )
-        left:Normalize()
-       
-        local xydist = math.sqrt( forward.x * forward.x + forward.y * forward.y )
-       
-        // enough here to get angles?
-        if( xydist > 0.001 ) then
-       
-                angles.y = math.deg( math.atan2( forward.y, forward.x ) )
-                angles.p = math.deg( math.atan2( -forward.z, xydist ) )
-                angles.r = math.deg( math.atan2( left.z, ( left.y * forward.x ) - ( left.x * forward.y ) ) )
+    local xydist = math.sqrt(forward.x * forward.x + forward.y * forward.y)
 
-        else
-       
-                angles.y = math.deg( math.atan2( -left.x, left.y ) )
-                angles.p = math.deg( math.atan2( -forward.z, xydist ) )
-                angles.r = 0
-       
-        end
+    if xydist > 0.001 then
+        angles.y = math.deg(math.atan2(forward.y, forward.x))
+        angles.p = math.deg(math.atan2(-forward.z, xydist))
+        angles.r = math.deg(math.atan2(left.z, (left.y * forward.x) - (left.x * forward.y)))
+    else
+        angles.y = math.deg(math.atan2(-left.x, left.y))
+        angles.p = math.deg(math.atan2(-forward.z, xydist))
+        angles.r = 0
+    end
 
-
-        return angles
-       
+    return angles
 end
 
---red = in blue = out
+-- Red = in, Blue = out
 usermessage.Hook("DebugOverlay_LineTrace", function(umsg)
-	local p1,p2,b = umsg:ReadVector(),umsg:ReadVector(),umsg:ReadBool()
-	local col
-	if b then col = Color(255,0,0,255) else col = Color(0,0,255,255) end
-	debugoverlay.Line(p1,p2,5, col)
+    local p1, p2, b = umsg:ReadVector(), umsg:ReadVector(), umsg:ReadBool()
+    local col = b and Color(255, 0, 0, 255) or Color(0, 0, 255, 255)
+    debugoverlay.Line(p1, p2, 5, col)
 end)
+
 usermessage.Hook("DebugOverlay_Cross", function(umsg)
-	local point = umsg:ReadVector()
-	local b = umsg:ReadBool()
-	if b then 
-		b = Color(0,255,0)
-	else 
-		b = Color(255,0,0) 
-	end
-	debugoverlay.Cross(point,5, 5, b,true)
+    local point = umsg:ReadVector()
+    local b = umsg:ReadBool()
+    local color = b and Color(0, 255, 0) or Color(255, 0, 0)
+    debugoverlay.Cross(point, 5, 5, color, true)
 end)
 
 hook.Add("Think ATLAS", "Reset Camera Roll ATLAS", function()
-	if not LocalPlayer():InVehicle() then
-		local a = LocalPlayer():EyeAngles()
-		if a.r != 0 then
-			a.r = math.ApproachAngle(a.r, 0, FrameTime()*160)
-			LocalPlayer():SetEyeAngles(a)
-		end
-	end
-end) 
-
--- local fps = {30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30}
--- function AvgFPS()
-	-- table.remove(fps,1)
-	-- table.insert(fps,1/FrameTime())
-	-- local avg = 0
-	-- for i=1,#fps do
-		-- avg = avg+fps[i]
-	-- end
-	-- return avg/#fps
--- end
--- hook.Add("Tick","Calc AVG FPS",AvgFPS)
-
--- hook.Add("HUDPaint","PrintVelocity", function() 
-	
-	-- draw.SimpleText(LocalPlayer():GetVelocity():__tostring(),"DermaLarge",100,100,Color(100,255,100),TEXT_ALIGN_LEFT,TEXT_ALIGN_TOP)
-
--- end)
+    local ply = LocalPlayer()
+    if not ply:InVehicle() then
+        local a = ply:EyeAngles()
+        if a.r != 0 then
+            a.r = math.ApproachAngle(a.r, 0, FrameTime() * 160)
+            ply:SetEyeAngles(a)
+        end
+    end
+end)

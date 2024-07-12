@@ -42,394 +42,98 @@ ENT.RenderGroup = RENDERGROUP_BOTH
 /*------------------------------------
         Initialize()
 ------------------------------------*/
-function ENT:Initialize( )
-
-        self:SetRenderBounds( self:OBBMins()*20, self:OBBMaxs()*20 )
-       
-        self.openpercent = 0
-		self.openpercent_bordermat = 0.8
-        self.openpercent_material = 0
-		
-		self:SetRenderMode(RENDERMODE_TRANSALPHA)
-		
-		if self:OnFloor() then
-			self:SetRenderOrigin( self:GetPos() - Vector(0,0,20))
-		else
-			self:SetRenderOrigin( self:GetPos() )
-		end
-		
-		-- self:SetRenderClipPlaneEnabled( true )
-		-- self:SetRenderClipPlane( self:GetForward(), 5 )
-       
+function ENT:Initialize()
+	self:SetRenderBounds(self:OBBMins() * 20, self:OBBMaxs() * 20)
+	self.openpercent = 0
+	self.openpercent_bordermat = 0.8
+	self.openpercent_material = 0
+	self:SetRenderMode(RENDERMODE_TRANSALPHA)
+	self:SetRenderOrigin(self:GetPos() - (self:OnFloor() and Vector(0, 0, 20) or Vector(0, 0, 0)))
 end
 
 usermessage.Hook("Portal:Moved", function(umsg)
-        local ent = umsg:ReadEntity()
-		local pos = umsg:ReadVector()
-		local ang = umsg:ReadAngle()
-        if ent and ent:IsValid() and ent.openpercent_bordermat then
-                ent.openpercent_bordermat = 0.8
-				
-				ent:SetAngles(ang)
-				if ent:OnFloor() then
-					ent:SetRenderOrigin( pos - Vector(0,0,20) )
-				else
-					ent:SetRenderOrigin(pos)
-				end
-				-- ent:SetRenderClipPlane( ent:GetForward(), 5 )
-        end
-		
-        if ent and ent:IsValid() and ent.openpercent then
-                ent.openpercent = 0
-				
-				ent:SetAngles(ang)
-				if ent:OnFloor() then
-					ent:SetRenderOrigin( pos - Vector(0,0,20) )
-				else
-					ent:SetRenderOrigin(pos)
-				end
-				-- ent:SetRenderClipPlane( ent:GetForward(), 5 )
-        end
-		
-        if ent and ent:IsValid() and ent.openpercent_material then
-                ent.openpercent_material = 0
-				
-				ent:SetAngles(ang)
-				if ent:OnFloor() then
-					ent:SetRenderOrigin( pos - Vector(0,0,20) )
-				else
-					ent:SetRenderOrigin(pos)
-				end
-				-- ent:SetRenderClipPlane( ent:GetForward(), 5 )
-        end
-		
+	local ent = umsg:ReadEntity()
+	local pos = umsg:ReadVector()
+	local ang = umsg:ReadAngle()
+
+	if IsValid(ent) then
+		ent.openpercent_bordermat = 0.8
+		ent.openpercent = 0
+		ent.openpercent_material = 0
+		ent:SetAngles(ang)
+		ent:SetRenderOrigin(pos - (ent:OnFloor() and Vector(0, 0, 20) or Vector(0, 0, 0)))
+	end
 end)
 
---I think this is from sassilization..
-local function IsInFront( posA, posB, normal )
-
-        local Vec1 = ( posB - posA ):GetNormalized()
-
-        return ( normal:Dot( Vec1 ) < 0 )
-		-- return true
-
+local function IsInFront(posA, posB, normal)
+	return (normal:Dot((posB - posA):GetNormalized()) < 0)
 end
 
 function ENT:Think()
+	if not self:GetNWBool("Potal:Activated", false) then return end
 
-        if self:GetNWBool("Potal:Activated",false) == false then return end
-		self.openpercent = math.Approach( self.openpercent, 1, FrameTime() * 3.4 * ( 0.75 + self.openpercent - 0.49 ) )
-		self.openpercent_bordermat = math.Approach( self.openpercent_bordermat, 0, FrameTime() * 1.5 )
-        self.openpercent_material = math.Approach( self.openpercent_material, 1, FrameTime() * 0.75 )
-		
-        if dlightenabled:GetBool() == false then return end
-       
-        local portaltype = self:GetNWInt("Potal:PortalType",TYPE_BLUE)
+	self.openpercent = math.Approach(self.openpercent, 1, FrameTime() * 3.4 * (0.75 + self.openpercent - 0.49))
+	self.openpercent_bordermat = math.Approach(self.openpercent_bordermat, 0, FrameTime() * 1.5)
+	self.openpercent_material = math.Approach(self.openpercent_material, 1, FrameTime() * 0.75)
 
-if GetConVarNumber("portal_color_1") >=14 then
-			glowcolor = Color(50,50,50,255)
-		elseif GetConVarNumber("portal_color_1") >=13 then
-			glowcolor = Color(200,200,200,255)
-		elseif GetConVarNumber("portal_color_1") >=12 then
-			glowcolor = Color(255,255,255,255)			
-		elseif GetConVarNumber("portal_color_1") >=11 then
-		
-			if GetConVarNumber("portal_color_saturation_1") >=2 then
-			glowcolor = Color(171,117,145,255)
-			elseif GetConVarNumber("portal_color_saturation_1") >=1 then
-			glowcolor = Color(199,89,146,255)
-			else		
-			glowcolor = Color(255,32,150,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_1") >=10 then
-		
-			if GetConVarNumber("portal_color_saturation_1") >=2 then
-			glowcolor = Color(171,117,171,255)
-			elseif GetConVarNumber("portal_color_saturation_1") >=1 then
-			glowcolor = Color(198,89,199,255)
-			else		
-			glowcolor = Color(250,32,255,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_1") >=9 then
-		
-			if GetConVarNumber("portal_color_saturation_1") >=2 then
-			glowcolor = Color(156,137,183,255)
-			elseif GetConVarNumber("portal_color_saturation_1") >=1 then
-			glowcolor = Color(153,113,207,255)
-			else		
-			glowcolor = Color(145,64,255,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_1") >=8 then
-		
-			if GetConVarNumber("portal_color_saturation_1") >=2 then
-			glowcolor = Color(117,124,171,255)
-			elseif GetConVarNumber("portal_color_saturation_1") >=1 then
-			glowcolor = Color(89,104,199,255)
-			else		
-			glowcolor = Color(0,32,255,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_1") >=7 then
-		
-			if GetConVarNumber("portal_color_saturation_1") >=2 then
-			glowcolor = Color(137,150,183,255)
-			elseif GetConVarNumber("portal_color_saturation_1") >=1 then
-			glowcolor = Color(113,139,207,255)
-			else		
-			glowcolor = Color( 0, 80, 255, 255 )
-		end
-			
-		elseif GetConVarNumber("portal_color_1") >=6 then
-		
-			if GetConVarNumber("portal_color_saturation_1") >=2 then
-			glowcolor = Color(117,171,171,255)
-			elseif GetConVarNumber("portal_color_saturation_1") >=1 then
-			glowcolor = Color(89,198,198,255)
-			else		
-			glowcolor = Color(32,250,255,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_1") >=5 then
-		
-			if GetConVarNumber("portal_color_saturation_1") >=2 then
-			glowcolor = Color(114,164,143,255)
-			elseif GetConVarNumber("portal_color_saturation_1") >=1 then
-			glowcolor = Color(87,195,145,255)
-			else		
-			glowcolor = Color(32,250,150,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_1") >=4 then
-		
-			if GetConVarNumber("portal_color_saturation_1") >=2 then
-			glowcolor = Color(114,164,114,255)
-			elseif GetConVarNumber("portal_color_saturation_1") >=1 then
-			glowcolor = Color(87,195,87,255)
-			else		
-			glowcolor = Color(32,250,32,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_1") >=3 then
-		
-			if GetConVarNumber("portal_color_saturation_1") >=2 then
-			glowcolor = Color(132,156,94,255)
-			elseif GetConVarNumber("portal_color_saturation_1") >=1 then
-			glowcolor = Color(139,188,62,255)
-			else		
-			glowcolor = Color(150,250,0,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_1") >=2 then
-		
-			if GetConVarNumber("portal_color_saturation_1") >=2 then
-			glowcolor = Color(171,171,117,255)
-			elseif GetConVarNumber("portal_color_saturation_1") >=1 then
-			glowcolor = Color(199,198,89,255)
-			else		
-			glowcolor = Color(255,250,32,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_1") >=1 then
-		
-			if GetConVarNumber("portal_color_saturation_1") >=2 then
-			glowcolor = Color(171,144,117,255)
-			elseif GetConVarNumber("portal_color_saturation_1") >=1 then
-			glowcolor = Color(199,143,83,255)
-			else		
-			glowcolor = Color( 255, 107, 0, 255 )
-		end
-		
-		else
-		
-			if GetConVarNumber("portal_color_saturation_1") >=2 then
-			glowcolor = Color(171,117,117,255)
-			elseif GetConVarNumber("portal_color_saturation_1") >=1 then
-			glowcolor = Color(199,89,89,255)
-			else 
-			glowcolor = Color(255,16,16,255)
-			
-		end
+	if not dlightenabled:GetBool() then return end
+
+	local portaltype = self:GetNWInt("Potal:PortalType", TYPE_BLUE)
+	local glowcolor = self:GetGlowColor(portaltype)
+	local brightness = self:GetBrightness(portaltype)
+
+	local dlight = DynamicLight(self:EntIndex())
+	if dlight then
+		dlight.Pos = self:GetRenderOrigin() + self:GetAngles():Forward()
+		dlight.r = glowcolor.r
+		dlight.g = glowcolor.g
+		dlight.b = glowcolor.b
+		dlight.brightness = brightness
+		dlight.Decay = 9999
+		dlight.Size = 50
+		dlight.DieTime = CurTime() + 0.9
+		dlight.Style = 5
 	end
-	
-if GetConVarNumber("portal_color_contraste_1") >=2 then	
-brightness = 7
-elseif GetConVarNumber("portal_color_contraste_1") >=1 then
-brightness = 5
-else
-brightness = 3
-end	
-
-        if portaltype == TYPE_ORANGE then
-if GetConVarNumber("portal_color_2") >=14 then
-			glowcolor = Color(50,50,50,255)
-		elseif GetConVarNumber("portal_color_2") >=13 then
-			glowcolor = Color(200,200,200,255)
-		elseif GetConVarNumber("portal_color_2") >=12 then
-			glowcolor = Color(255,255,255,255)			
-		elseif GetConVarNumber("portal_color_2") >=11 then
-		
-			if GetConVarNumber("portal_color_saturation_2") >=2 then
-			glowcolor = Color(171,117,145,255)
-			elseif GetConVarNumber("portal_color_saturation_2") >=1 then
-			glowcolor = Color(199,89,146,255)
-			else		
-			glowcolor = Color(255,32,150,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_2") >=10 then
-		
-			if GetConVarNumber("portal_color_saturation_2") >=2 then
-			glowcolor = Color(171,117,171,255)
-			elseif GetConVarNumber("portal_color_saturation_2") >=1 then
-			glowcolor = Color(198,89,199,255)
-			else		
-			glowcolor = Color(250,32,255,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_2") >=9 then
-		
-			if GetConVarNumber("portal_color_saturation_2") >=2 then
-			glowcolor = Color(156,137,183,255)
-			elseif GetConVarNumber("portal_color_saturation_2") >=1 then
-			glowcolor = Color(153,113,207,255)
-			else		
-			glowcolor = Color(145,64,255,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_2") >=8 then
-		
-			if GetConVarNumber("portal_color_saturation_2") >=2 then
-			glowcolor = Color(117,124,171,255)
-			elseif GetConVarNumber("portal_color_saturation_2") >=1 then
-			glowcolor = Color(89,104,199,255)
-			else		
-			glowcolor = Color(0,32,255,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_2") >=7 then
-		
-			if GetConVarNumber("portal_color_saturation_2") >=2 then
-			glowcolor = Color(137,150,183,255)
-			elseif GetConVarNumber("portal_color_saturation_2") >=1 then
-			glowcolor = Color(113,139,207,255)
-			else		
-			glowcolor = Color( 0, 80, 255, 255 )
-		end
-			
-		elseif GetConVarNumber("portal_color_2") >=6 then
-		
-			if GetConVarNumber("portal_color_saturation_2") >=2 then
-			glowcolor = Color(117,171,171,255)
-			elseif GetConVarNumber("portal_color_saturation_2") >=1 then
-			glowcolor = Color(89,198,198,255)
-			else		
-			glowcolor = Color(32,250,255,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_2") >=5 then
-		
-			if GetConVarNumber("portal_color_saturation_2") >=2 then
-			glowcolor = Color(114,164,143,255)
-			elseif GetConVarNumber("portal_color_saturation_2") >=1 then
-			glowcolor = Color(87,195,145,255)
-			else		
-			glowcolor = Color(32,250,150,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_2") >=4 then
-		
-			if GetConVarNumber("portal_color_saturation_2") >=2 then
-			glowcolor = Color(114,164,114,255)
-			elseif GetConVarNumber("portal_color_saturation_2") >=1 then
-			glowcolor = Color(87,195,87,255)
-			else		
-			glowcolor = Color(32,250,32,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_2") >=3 then
-		
-			if GetConVarNumber("portal_color_saturation_2") >=2 then
-			glowcolor = Color(132,156,94,255)
-			elseif GetConVarNumber("portal_color_saturation_2") >=1 then
-			glowcolor = Color(139,188,62,255)
-			else		
-			glowcolor = Color(150,250,0,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_2") >=2 then
-		
-			if GetConVarNumber("portal_color_saturation_2") >=2 then
-			glowcolor = Color(171,171,117,255)
-			elseif GetConVarNumber("portal_color_saturation_2") >=1 then
-			glowcolor = Color(199,198,89,255)
-			else		
-			glowcolor = Color(255,250,32,255)
-		end
-			
-		elseif GetConVarNumber("portal_color_2") >=1 then
-		
-			if GetConVarNumber("portal_color_saturation_2") >=2 then
-			glowcolor = Color(171,144,117,255)
-			elseif GetConVarNumber("portal_color_saturation_2") >=1 then
-			glowcolor = Color(199,143,83,255)
-			else		
-			glowcolor = Color( 255, 107, 0, 255 )
-		end
-		
-		else
-		
-			if GetConVarNumber("portal_color_saturation_2") >=2 then
-			glowcolor = Color(171,117,117,255)
-			elseif GetConVarNumber("portal_color_saturation_2") >=1 then
-			glowcolor = Color(199,89,89,255)
-			else 
-			glowcolor = Color(255,16,16,255)
-			
-		end
-	end
-	
-if GetConVarNumber("portal_color_contraste_2") >=2 then	
-brightness = 7
-elseif GetConVarNumber("portal_color_contraste_2") >=1 then
-brightness = 5
-else
-brightness = 3
-end	
-	
-        end
-       
-        --[[if lightteleport:GetBool() then
-       
-                local portal = self:GetNWEntity( "Potal:Other", nil )
-       
-                if IsValid( portal ) then
-
-                        glowvec = render.GetLightColor( portal:GetPos() ) * 255
-                        glowcolor = Color( glowvec.x, glowvec.y, glowvec.z )
-                       
-                end
-                       
-        end]]
-       -- if AvgFPS() > 60 then
-        local dlight = DynamicLight( self:EntIndex() )
-        if dlight then
-			local col = glowcolor
-			dlight.Pos = self:GetRenderOrigin() + self:GetAngles():Forward()
-			dlight.r = col.r
-			dlight.g = col.g
-			dlight.b = col.b
-			dlight.brightness = brightness
-			dlight.Decay = 9999
-			dlight.Size = 50
-			dlight.DieTime = CurTime() + .9
-			dlight.Style = 5
-        end
-		
-	   -- end
 end
+
+function ENT:GetGlowColor(portaltype)
+	local color1 = self:GetColorFromConVars("portal_color_1", "portal_color_saturation_1")
+	local color2 = self:GetColorFromConVars("portal_color_2", "portal_color_saturation_2")
+	return portaltype == TYPE_BLUE and color1 or color2
+end
+
+function ENT:GetBrightness(portaltype)
+	local contrast1 = GetConVarNumber("portal_color_contraste_1")
+	local contrast2 = GetConVarNumber("portal_color_contraste_2")
+	local contrast = portaltype == TYPE_BLUE and contrast1 or contrast2
+	return contrast >= 2 and 7 or contrast >= 1 and 5 or 3
+end
+
+function ENT:GetColorFromConVars(colorConVar, saturationConVar)
+	local colorValue = GetConVarNumber(colorConVar)
+	local saturationValue = GetConVarNumber(saturationConVar)
+
+	local colorTable = {
+		[14] = Color(50, 50, 50, 255),
+		[13] = Color(200, 200, 200, 255),
+		[12] = Color(255, 255, 255, 255),
+		[11] = saturationValue >= 2 and Color(171, 117, 145, 255) or saturationValue >= 1 and Color(199, 89, 146, 255) or Color(255, 32, 150, 255),
+		[10] = saturationValue >= 2 and Color(171, 117, 171, 255) or saturationValue >= 1 and Color(198, 89, 199, 255) or Color(250, 32, 255, 255),
+		[9] = saturationValue >= 2 and Color(156, 137, 183, 255) or saturationValue >= 1 and Color(153, 113, 207, 255) or Color(145, 64, 255, 255),
+		[8] = saturationValue >= 2 and Color(117, 124, 171, 255) or saturationValue >= 1 and Color(89, 104, 199, 255) or Color(0, 32, 255, 255),
+		[7] = saturationValue >= 2 and Color(137, 150, 183, 255) or saturationValue >= 1 and Color(113, 139, 207, 255) or Color(0, 80, 255, 255),
+		[6] = saturationValue >= 2 and Color(117, 171, 171, 255) or saturationValue >= 1 and Color(89, 198, 198, 255) or Color(32, 250, 255, 255),
+		[5] = saturationValue >= 2 and Color(114, 164, 143, 255) or saturationValue >= 1 and Color(87, 195, 145, 255) or Color(32, 250, 150, 255),
+		[4] = saturationValue >= 2 and Color(114, 164, 114, 255) or saturationValue >= 1 and Color(87, 195, 87, 255) or Color(32, 250, 32, 255),
+		[3] = saturationValue >= 2 and Color(132, 156, 94, 255) or saturationValue >= 1 and Color(139, 188, 62, 255) or Color(150, 250, 0, 255),
+		[2] = saturationValue >= 2 and Color(171, 171, 117, 255) or saturationValue >= 1 and Color(199, 198, 89, 255) or Color(255, 250, 32, 255),
+		[1] = saturationValue >= 2 and Color(171, 144, 117, 255) or saturationValue >= 1 and Color(199, 143, 83, 255) or Color(255, 107, 0, 255),
+		[0] = saturationValue >= 2 and Color(171, 117, 117, 255) or saturationValue >= 1 and Color(199, 89, 89, 255) or Color(255, 16, 16, 255)
+	}
+
+	return colorTable[colorValue]
+end
+
 
 				--Draw colored overlay.
 color_red = Material("models/portals/color/portalstaticoverlay_red", "PortalRefract")
