@@ -1,3 +1,3 @@
-ORIGINAL ADDON LINK:https://steamcommunity.com/sharedfiles/filedetails/?id=1800764828
+Complete refactor of original mod, originally starting as a fix mod
 
-Fixes a couple things
+ORIGINAL ADDON LINK:https://steamcommunity.com/sharedfiles/filedetails/?id=1800764828
